@@ -23,6 +23,39 @@
     return TOPICS[0];
   }
 
+  // Detects genuine quoted Qur'anic / Hadith Arabic inside otherwise-Urdu
+  // text (e.g. حدیث "طَلَبُ الْعِلْمِ فَرِيضَةٌ..." کس کتاب میں مروی ہے؟) and
+  // renders that quoted span in the Amiri Arabic font for clarity, while
+  // leaving the surrounding Urdu (which may itself carry an ordinary izafat
+  // kasra, e.g. "علمِ نافع") in the Nastaleeq font untouched. Detection is
+  // based on Arabic vowelling marks that Urdu prose does not normally use
+  // (fatha/damma/shadda/sukun/tanween/dagger-alif/Qur'anic annotation
+  // signs) — the plain izafat kasra (ِ) is deliberately excluded so
+  // ordinary Urdu words are never miscategorized.
+  var STRONG_ARABIC_RE = /[ًٌٍَُّْٰؐ-ؚۖ-ۭࣔ-࣡]/;
+  var QUOTE_RE = /"([^"]+)"/g;
+
+  function appendRichText(container, text) {
+    if (text === undefined || text === null) return;
+    text = String(text);
+    var re = new RegExp(QUOTE_RE.source, "g");
+    var lastIndex = 0;
+    var m;
+    while ((m = re.exec(text)) !== null) {
+      var quoted = m[1];
+      if (STRONG_ARABIC_RE.test(quoted)) {
+        if (m.index > lastIndex) {
+          container.appendChild(document.createTextNode(text.slice(lastIndex, m.index)));
+        }
+        container.appendChild(el("span", { class: "quran", text: m[0] }));
+        lastIndex = re.lastIndex;
+      }
+    }
+    if (lastIndex < text.length) {
+      container.appendChild(document.createTextNode(text.slice(lastIndex)));
+    }
+  }
+
   // ---------------- Sidebar / mobile select builders ----------------
   function buildSidebar(container, activeNum, onPick) {
     container.innerHTML = "";
@@ -86,7 +119,9 @@
     var body = el("div", { class: "article-body" });
     t.article.forEach(function (b, idx) {
       if (b.type === "heading") {
-        body.appendChild(el("h3", { text: b.text }));
+        var h3 = el("h3");
+        appendRichText(h3, b.text);
+        body.appendChild(h3);
       } else if (b.type === "quote") {
         var box = el("div", { class: "quote-box" });
         box.appendChild(el("div", { class: "arabic quran", text: b.arabic }));
@@ -95,7 +130,9 @@
         body.appendChild(box);
       } else {
         var pClass = idx === 0 && b.bold ? "lead" : "";
-        body.appendChild(el("p", { class: pClass, text: b.text }));
+        var pEl = el("p", { class: pClass });
+        appendRichText(pEl, b.text);
+        body.appendChild(pEl);
       }
     });
     pane.appendChild(body);
@@ -115,10 +152,15 @@
     t.qa.forEach(function (pair, i) {
       var item = el("div", { class: "qa-item" + (i === 0 ? " open" : "") });
       var q = el("div", { class: "qa-question" });
-      q.appendChild(el("span", { text: (i + 1) + "۔ " + pair.q }));
+      var qTextSpan = el("span");
+      qTextSpan.appendChild(document.createTextNode((i + 1) + "۔ "));
+      appendRichText(qTextSpan, pair.q);
+      q.appendChild(qTextSpan);
       q.appendChild(el("span", { class: "arrow", text: "▾" }));
       var a = el("div", { class: "qa-answer" });
-      a.appendChild(el("p", { text: pair.a }));
+      var aP = el("p");
+      appendRichText(aP, pair.a);
+      a.appendChild(aP);
       q.addEventListener("click", function () {
         item.classList.toggle("open");
       });
@@ -163,13 +205,15 @@
       var card = el("div", { class: "mcq-card" });
       var qline = el("div", { class: "mcq-q" });
       qline.appendChild(el("span", { class: "qnum", text: (i + 1) + "۔" }));
-      qline.appendChild(document.createTextNode(item.q));
+      appendRichText(qline, item.q);
       card.appendChild(qline);
 
       var optsWrap = el("div", { class: "mcq-options" });
       var letters = ["الف", "ب", "ج", "د"];
       item.options.forEach(function (optText, oi) {
-        var btn = el("button", { class: "mcq-opt", text: "(" + letters[oi] + ") " + optText });
+        var btn = el("button", { class: "mcq-opt" });
+        btn.appendChild(document.createTextNode("(" + letters[oi] + ") "));
+        appendRichText(btn, optText);
         btn.addEventListener("click", function () {
           if (card.classList.contains("answered")) return;
           card.classList.add("answered");
@@ -191,10 +235,9 @@
       });
       card.appendChild(optsWrap);
 
-      var ansLine = el("div", {
-        class: "mcq-answer-line",
-        text: "درست جواب: (" + letters[item.correctIndex] + ") — " + item.correctText,
-      });
+      var ansLine = el("div", { class: "mcq-answer-line" });
+      ansLine.appendChild(document.createTextNode("درست جواب: (" + letters[item.correctIndex] + ") — "));
+      appendRichText(ansLine, item.correctText);
       card.appendChild(ansLine);
 
       wrap.appendChild(card);
