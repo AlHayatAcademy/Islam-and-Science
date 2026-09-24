@@ -36,6 +36,10 @@ TOPICS.forEach((t) => {
 });
 if (errors) { console.error(errors + " validation error(s)"); process.exit(1); }
 
+// ---------------- asset version (cache busting) ----------------
+const V = require("crypto").createHash("md5").update([fs.readFileSync(path.join(ROOT, "assets/css/style.css")), fs.readFileSync(path.join(ROOT, "assets/js/app.js")), JSON.stringify(TOPICS), JSON.stringify(extras), fs.readFileSync(path.join(ROOT, "src/figs.js"))].join("|")).digest("hex").slice(0, 8);
+const vv = (u) => u + "?v=" + V;
+
 // ---------------- helpers ----------------
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const HARAKAT = /[\u064B-\u065F\u0670\u06D6-\u06ED\u08D4-\u08E1]/;
@@ -62,18 +66,18 @@ const abs = (p) => (CFG.siteUrl ? CFG.siteUrl.replace(/\/$/, "") + "/" + p : "")
 
 // ---------------- icons ----------------
 const I = {
-  logo: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#fbf6ec" opacity=".15"/><path d="M40 14a20 20 0 1 0 0 36 16 16 0 1 1 0-36z" fill="#fbf6ec"/><circle cx="46" cy="16" r="3.2" fill="#e7b96a"/></svg>`,
-  search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
-  theme: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`,
-  menu: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>`,
-  book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>`,
-  list: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>`,
-  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
-  clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
-  chart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>`,
-  dict: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h10a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M8 9h6M8 13h4"/></svg>`,
-  map: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>`,
-  cards: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>`,
+  logo: `<svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#fbf6ec" opacity=".15"/><path d="M40 14a20 20 0 1 0 0 36 16 16 0 1 1 0-36z" fill="#fbf6ec"/><circle cx="46" cy="16" r="3.2" fill="#e7b96a"/></svg>`,
+  search: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
+  theme: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`,
+  menu: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>`,
+  book: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>`,
+  list: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>`,
+  check: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
+  clock: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+  chart: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>`,
+  dict: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h10a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M8 9h6M8 13h4"/></svg>`,
+  map: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>`,
+  cards: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>`,
 };
 
 // Line-icon set (24x24, stroke). ic(name) returns an inline SVG with class "ic".
@@ -123,7 +127,7 @@ const P = {
   t14: '<path d="M7 3c0 6 10 6 10 12s-10 6-10 6M17 3c0 6-10 6-10 12s10 6 10 6"/><path d="M8 6h8M8 18h8M9.5 9h5M9.5 15h5"/>',
   t15: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
 };
-const ic = (n, cls = "ic") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ""}</svg>`;
+const ic = (n, cls = "ic") => `<svg class="${cls}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ""}</svg>`;
 const tic = (num, cls = "ic") => ic("t" + num, cls);
 
 // ---------------- page shell ----------------
@@ -157,7 +161,7 @@ ${canonical ? `<meta property="og:url" content="${canonical}">` : ""}
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/NafeesNastaleeq.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="${vv("assets/css/style.css")}">
 <script>(function(){try{var d=document.documentElement,t=localStorage.getItem("isc-theme"),f=localStorage.getItem("isc-fs");if(t)d.setAttribute("data-theme",t);if(f)d.setAttribute("data-fs",f);}catch(e){}})();</script>
 ${extraHead}
 </head>
@@ -184,9 +188,9 @@ ${body}
   <p>${I.logo.replace("<svg", '<svg class="foot-logo"')} <b>${esc(CFG.orgName)}</b> — ${esc(CFG.courseName)}: ${esc(CFG.tagline)}</p>
   <p class="en">Powered by <a href="https://institute.drimranhayat.com/" target="_blank" rel="noopener">Al-Hayat Research Institute of Social Sciences</a> · <a href="https://drimranhayat.com/" target="_blank" rel="noopener">drimranhayat.com</a> · <a href="https://drimranhayat.com/contact" target="_blank" rel="noopener">Contact</a></p>
 </footer>
-<script src="data/meta.js"></script>
-${scripts.map((s) => `<script src="${s}"></script>`).join("\n")}
-<script src="assets/js/app.js"></script>
+<script src="${vv("data/meta.js")}"></script>
+${scripts.map((s) => `<script src="${vv(s)}"></script>`).join("\n")}
+<script src="${vv("assets/js/app.js")}"></script>
 </body>
 </html>
 `;
@@ -360,12 +364,18 @@ function home() {
 }
 
 // ---------------- syllabus ----------------
+function syllabusRow(m, u) {
+  return `<div class="syl-row u${u}" data-t="${m.num}">
+  <a class="syl-main" href="${m.url}"><span class="snum">${m.num}</span><span class="stitle"><b>${ic("t" + m.num, "ic sic")}${esc(m.title)}</b><small>${esc(m.intro)}</small></span></a>
+  <span class="syl-actions"><span class="qscore"></span><a class="pill p-art" href="${m.url}#article">مضمون</a><a class="pill p-qa" href="${m.url}#qa">سوال و جواب</a><a class="pill p-mcq" href="${m.url}#quiz">MCQs</a></span>
+</div>`;
+}
 function syllabus() {
   const body = `
 <div class="wrap">
   <div class="page-head"><h1><span class="h-ic">${ic("list")}</span>نصاب — ${N} موضوعات</h1><p>کورس چار حصوں میں ہے۔ ہر موضوع میں مضمون، سوال و جواب، غلط فہمیاں، فلیش کارڈز اور کوئز شامل ہیں۔</p>
   <div class="row" style="margin-top:8px"><div class="meter" style="max-width:360px"><span data-read-meter style="width:0"></span></div><span class="pill ok">پڑھ لیے: <span data-read-count>0 / ${N}</span></span></div></div>
-  ${extras.units.map((u) => `<div class="unit"><h2>${esc(u.name)}</h2><div class="grid grid-2">${u.topics.map((n) => topicCard(META[n - 1])).join("")}</div></div>`).join("")}
+  ${extras.units.map((u, ui) => `<div class="unit"><h2>${esc(u.name)}</h2><div class="syl-list">${u.topics.map((n) => syllabusRow(META[n - 1], ui + 1)).join("")}</div></div>`).join("")}
 </div>`;
   return shell({ file: "syllabus.html", page: "syllabus", title: "نصاب", desc: `اسلام اور سائنس کورس کا مکمل نصاب: ${N} موضوعات۔`, body, active: "syllabus" });
 }
@@ -536,13 +546,13 @@ write("data/mcq.js", "window.MCQ=" + JSON.stringify(MCQ) + ";\n");
 write("data/search.js", "window.SEARCH=" + JSON.stringify(searchIndex()) + ";\n");
 
 // service worker: static assets precached; HTML pages network-first (safe with host "pretty URL" redirects)
-const precache = ["data/meta.js", "data/mcq.js", "data/search.js", "assets/css/style.css", "assets/js/app.js", "favicon.svg", "manifest.webmanifest", "fonts/NafeesNastaleeq.woff2", "fonts/Amiri-Regular.woff2", "fonts/Amiri-Bold.woff2", "icons/icon-192.png", "icons/icon-512.png"];
+const precache = [...["data/meta.js", "data/mcq.js", "data/search.js", "assets/css/style.css", "assets/js/app.js"].map(vv), "favicon.svg", "manifest.webmanifest", "fonts/NafeesNastaleeq.woff2", "fonts/Amiri-Regular.woff2", "fonts/Amiri-Bold.woff2", "icons/icon-192.png", "icons/icon-512.png"];
 const crypto = require("crypto");
 const ver = crypto.createHash("md5").update("rev3|" + [...precache, ...Object.keys(pages)].map((f) => { try { return fs.readFileSync(path.join(ROOT, f)); } catch (e) { return ""; } }).join("|")).digest("hex").slice(0, 10);
 write("sw.js", `// Generated by build.js — offline support
 const CACHE = "isc-${ver}";
 const ASSETS = ${JSON.stringify(precache)};
-self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => Promise.all(ASSETS.map((u) => fetch(u).then((r) => r.ok && !r.redirected ? c.put(u, r) : null).catch(() => null)))).then(() => self.skipWaiting())); });
+self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => Promise.all(ASSETS.map((u) => fetch(u, { cache: "reload" }).then((r) => r.ok && !r.redirected ? c.put(u, r) : null).catch(() => null)))).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
 // store a clean (non-redirected) copy of a response
 function clean(res) { return res.blob().then((b) => new Response(b, { status: res.status, statusText: res.statusText, headers: res.headers })); }
@@ -558,7 +568,7 @@ self.addEventListener("fetch", (e) => {
     }).catch(() => caches.open(CACHE).then(async (c) => { for (const k of pageKeys(req.url)) { const r = await c.match(k); if (r) return r; } return (await c.match(new URL("./", location).href)) || Response.error(); })));
     return;
   }
-  e.respondWith(caches.match(req, { ignoreSearch: true }).then((hit) => hit || fetch(req).then((res) => {
+  e.respondWith(caches.match(req).then((hit) => hit || fetch(req).then((res) => {
     if (res.ok && !res.redirected && res.type === "basic") { const cp = res.clone(); caches.open(CACHE).then((c) => c.put(req, cp)); }
     return res;
   })));

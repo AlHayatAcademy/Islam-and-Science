@@ -29,7 +29,7 @@
   }
   function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   var LETTERS = ["الف", "ب", "ج", "د"];
-  function svgI(d) { return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; }
+  function svgI(d) { return '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; }
   var IC = {
     shuffle: svgI('<path d="M3 7h4l10 10h4M3 17h4l3-3M14 10l3-3h4M18 4l3 3-3 3M18 14l3 3-3 3"/>'),
     reset: svgI('<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/>'),
@@ -250,7 +250,7 @@
     var s = load(), M = meta(), readN = Object.keys(s.read).length;
     $$("[data-read-count]").forEach(function (el) { el.textContent = readN + " / " + M.length; });
     $$("[data-read-meter]").forEach(function (el) { el.style.width = pct(readN, M.length) + "%"; });
-    $$(".topic-card[data-t]").forEach(function (c) {
+    $$(".topic-card[data-t], .syl-row[data-t]").forEach(function (c) {
       var n = +c.dataset.t; if (s.read[n]) c.classList.add("done");
       var q = s.quiz[n]; var slot = $(".qscore", c);
       if (slot) slot.innerHTML = s.read[n] ? '<span class="pill ok">✓ پڑھ لیا</span>' + (q ? ' <span class="pill gold">کوئز: ' + q.best + "%</span>" : "") : (q ? '<span class="pill gold">کوئز: ' + q.best + "%</span>" : "");
