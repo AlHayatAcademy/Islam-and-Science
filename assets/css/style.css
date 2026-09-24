@@ -181,7 +181,27 @@ input:focus, select:focus { border-color: var(--teal); outline: none; }
 .topic-head { padding: 22px 0 6px; }
 .topic-head h1 { margin: 0; font-size: 1.75rem; color: var(--teal-strong); line-height: 1.9; }
 .topic-head .row { margin-top: 6px; }
-.tabs { position: sticky; top: 60px; z-index: 20; background: var(--bg); display: flex; gap: 6px; overflow-x: auto; padding: 8px 0; border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.topic-bar { position: sticky; top: 60px; z-index: 20; background: var(--bg); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding: 8px 0; scrollbar-width: none; flex: 1 1 auto; min-width: 0; }
+.pops { display: flex; gap: 6px; flex: 0 0 auto; padding-inline-start: 8px; border-inline-start: 1px solid var(--line); }
+.pop-btn { background: var(--surface); border: 1px dashed var(--gold); color: var(--ink-soft); border-radius: 999px; padding: 2px 12px; cursor: pointer; font: inherit; font-size: 0.85rem; line-height: 2.1; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+.pop-btn[aria-expanded="true"] { background: var(--gold-soft); color: var(--ink); border-style: solid; }
+.pop { position: absolute; top: calc(100% + 6px); inset-inline-end: 0; width: min(420px, calc(100vw - 32px)); max-height: 65vh; overflow-y: auto; box-shadow: 0 12px 32px rgba(0,0,0,.18); z-index: 40; }
+.pop ul { margin: 0; padding-right: 20px; font-size: 0.92rem; }
+.more { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 6px 16px; margin: 12px 0; }
+.more > summary { cursor: pointer; font-weight: 700; color: var(--teal-strong); list-style: none; display: flex; align-items: center; gap: 6px; }
+.more > summary::-webkit-details-marker { display: none; }
+.more > summary::after { content: "▾"; margin-inline-start: auto; color: var(--ink-soft); transition: transform .2s; }
+.more[open] > summary::after { transform: rotate(180deg); }
+.more ol, .more ul { padding-right: 22px; }
+.wrap.narrow { max-width: 900px; }
+.hero-progress { display: flex; align-items: center; gap: 10px; max-width: 460px; margin: 16px auto 0; white-space: nowrap; }
+.hero-progress .meter { min-width: 100px; display: block; }
+.quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin: 18px 0 6px; }
+.quick a { display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px; color: var(--ink); font-size: 0.92rem; }
+.quick a:hover { border-color: var(--teal); text-decoration: none; }
+.quick .ic { color: var(--teal); }
+@media (max-width: 600px) { .pop-btn { padding: 2px 9px; } .pop-btn .ic { display: none; } }
 .tabs::-webkit-scrollbar { display: none; }
 .tab { flex: 0 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 2px 16px; cursor: pointer; font-size: 0.9rem; line-height: 2.1; color: var(--ink-soft); }
 .tab[aria-selected="true"] { background: var(--teal); color: var(--on-accent); border-color: var(--teal); }
@@ -195,7 +215,7 @@ input:focus, select:focus { border-color: var(--teal); outline: none; }
 .box-title { font-size: 1rem; color: var(--teal-strong); margin: 0 0 6px; font-weight: 700; }
 .objectives { background: var(--teal-soft); border: 0; }
 .objectives ul { margin: 0; padding-right: 20px; }
-.examq { background: var(--gold-soft); border-right: 5px solid var(--gold); border-radius: 12px; padding: 12px 16px; margin: 16px 0; }
+.examq { background: var(--gold-soft); border-right: 4px solid var(--gold); border-radius: 10px; padding: 8px 14px; margin: 4px 0 12px; font-size: .95rem; }
 .examq b { color: var(--gold); }
 .article { font-size: 1.05em; }
 .article h2 { font-size: 1.3rem; color: var(--teal-strong); margin: 30px 0 6px; line-height: 1.9; scroll-margin-top: 130px; }
@@ -405,3 +425,4 @@ svg.ic { max-width: 1.4em; max-height: 1.4em; }
   .header-inner { min-height: 56px; gap: 6px; }
   .tools { gap: 3px; }
 }
+.toc a.toc-part { font-weight: 700; color: var(--gold); margin-top: 4px; }

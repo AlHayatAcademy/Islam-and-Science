@@ -62,9 +62,11 @@
       toast(nx === "dark" ? "رات کا موڈ" : "دن کا موڈ");
     });
     function setFs(v) { v = Math.max(1, Math.min(4, v)); html.setAttribute("data-fs", String(v)); pref("fs", String(v)); }
-    var up = $("#fsUp"), dn = $("#fsDown");
-    if (up) up.addEventListener("click", function () { setFs(+(html.getAttribute("data-fs") || 2) + 1); });
-    if (dn) dn.addEventListener("click", function () { setFs(+(html.getAttribute("data-fs") || 2) - 1); });
+    var fc = $("#fsCycle");
+    if (fc) fc.addEventListener("click", function () {
+      var v = (+(html.getAttribute("data-fs") || 2)) % 4 + 1; setFs(v);
+      toast("فونٹ: " + ["چھوٹا", "درمیانہ", "بڑا", "بہت بڑا"][v - 1]);
+    });
     if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
       window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
     }
@@ -176,6 +178,29 @@
     var sec = h && $("#" + CSS.escape(h));
     if (sec && !sec.classList.contains("panel") && $("#p-article").contains(sec)) { show("article"); setTimeout(function () { sec.scrollIntoView(); }, 50); }
     else show(h || "article");
+    if (sec && sec.tagName === "DETAILS") sec.open = true;
+
+    // click-to-open popovers (objectives / contents)
+    var pops = $$(".pop-btn");
+    function closePops(except) { pops.forEach(function (b) { if (b === except) return; b.setAttribute("aria-expanded", "false"); var p = $("#" + b.dataset.pop); if (p) p.classList.add("hidden"); }); }
+    pops.forEach(function (b) {
+      b.addEventListener("click", function (e) {
+        e.stopPropagation(); closePops(b);
+        var p = $("#" + b.dataset.pop), open = p.classList.toggle("hidden") === false;
+        b.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    });
+    document.addEventListener("click", function (e) { if (!e.target.closest(".pop")) closePops(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePops(); });
+    $$("#popToc a").forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        var t = $(a.getAttribute("href")); if (!t) return;
+        e.preventDefault(); closePops(); show("article", true);
+        if (t.tagName === "DETAILS") t.open = true;
+        var y = t.getBoundingClientRect().top + window.scrollY - 80; window.scrollTo({ top: y, behavior: "smooth" });
+      });
+    });
+    $$("[data-go]").forEach(function (b) { b.addEventListener("click", function () { var t = $('.tab[data-tab="' + b.dataset.go + '"]'); if (t) t.click(); }); });
 
     // reading bar + auto mark read
     var bar = $(".read-bar span"), art = $("#p-article");

@@ -133,7 +133,7 @@ const tic = (num, cls = "ic") => ic("t" + num, cls);
 // ---------------- page shell ----------------
 const NAV = [
   ["index.html", "ہوم", "home", "home"], ["syllabus.html", "نصاب", "syllabus", "list"], ["glossary.html", "فرہنگ", "glossary", "dict"],
-  ["timeline.html", "ٹائم لائن و نقشہ", "timeline", "map"], ["exam.html", "فائنل امتحان", "exam", "exam"], ["progress.html", "میری پیش رفت", "progress", "chart"],
+  ["exam.html", "فائنل امتحان", "exam", "exam"], ["progress.html", "میری پیش رفت", "progress", "chart"],
 ];
 function shell({ file, page, title, desc, body, active, extraHead = "", scripts = [], bodyAttrs = "", ogType = "website" }) {
   const full = title === CFG.siteName ? title : `${title} — ${CFG.siteName}`;
@@ -173,8 +173,7 @@ ${extraHead}
     <nav class="main-nav" id="mainNav" aria-label="مرکزی مینو">${nav}</nav>
     <div class="tools">
       <a class="icon-btn" href="search.html" aria-label="تلاش" title="تلاش">${I.search}</a>
-      <button class="icon-btn" id="fsDown" type="button" aria-label="فونٹ چھوٹا کریں" title="فونٹ چھوٹا کریں"><span class="fs-label">A−</span></button>
-      <button class="icon-btn" id="fsUp" type="button" aria-label="فونٹ بڑا کریں" title="فونٹ بڑا کریں"><span class="fs-label">A+</span></button>
+      <button class="icon-btn" id="fsCycle" type="button" aria-label="فونٹ کا سائز" title="فونٹ کا سائز"><span class="fs-label">Aa</span></button>
       <button class="icon-btn" id="themeBtn" type="button" aria-label="دن / رات موڈ" title="دن / رات موڈ">${I.theme}</button>
       <button class="icon-btn hamburger" id="hamburger" type="button" aria-label="مینو" aria-expanded="false" aria-controls="mainNav">${I.menu}</button>
     </div>
@@ -234,69 +233,60 @@ function topicPage(t) {
   const cards = [...t.terms.map((x) => ({ f: x.t, b: x.d })), ...t.qa.filter((q) => q.k === "مختصر").map((q) => ({ f: q.q, b: q.a.split("\n")[0] }))];
   const kinds = { مختصر: "teal", تفصیلی: "purple", تجزیاتی: "gold", موازنہ: "ok" };
   const body = `
-<div class="wrap">
+<div class="wrap narrow">
   <div class="topic-head">
-    <div class="crumbs"><a href="index.html">ہوم</a> › <a href="syllabus.html">نصاب</a> › موضوع ${t.num}</div>
-    <h1><span class="h-ic">${tic(t.num)}</span>${t.num}. ${esc(t.fullTitle)}</h1>
-    <div class="row">
-      <span class="pill teal">${ic("clock")}تقریباً ${m.read} منٹ مطالعہ</span>
-      <span class="pill">${ic("chat")}${t.qa.length} سوال و جواب</span><span class="pill">${ic("quiz")}${t.mcq.length} MCQs</span><span class="pill">${ic("tag")}${t.terms.length} اصطلاحات</span>
-      <span class="spacer"></span>
-      <label class="small muted" for="topicSelect" style="white-space:nowrap">موضوع بدلیں:</label>
-      <select id="topicSelect" style="width:auto;max-width:260px">${META.map((x) => `<option value="${x.url}"${x.num === t.num ? " selected" : ""}>${x.num}. ${esc(x.title)}</option>`).join("")}</select>
-    </div>
+    <div class="crumbs"><a href="syllabus.html">نصاب</a> › موضوع ${t.num} از ${N}</div>
+    <h1>${t.num}. ${esc(t.fullTitle)}</h1>
   </div>
-  <div class="tabs" role="tablist" aria-label="موضوع کے حصے">
-    <button class="tab" role="tab" data-tab="article" aria-controls="p-article">${ic("article")}مضمون</button>
-    <button class="tab" role="tab" data-tab="qa" aria-controls="p-qa">${ic("chat")}سوال و جواب</button>
-    <button class="tab" role="tab" data-tab="myths" aria-controls="p-myths">${ic("bulb")}غلط فہمیاں اور غور و فکر</button>
-    <button class="tab" role="tab" data-tab="cards" aria-controls="p-cards">${ic("cards")}فلیش کارڈز</button>
-    <button class="tab" role="tab" data-tab="quiz" aria-controls="p-quiz">${ic("quiz")}کوئز (${t.mcq.length})</button>
+
+  <div class="topic-bar">
+    <div class="tabs" role="tablist" aria-label="موضوع کے حصے">
+      <button class="tab" role="tab" data-tab="article" aria-controls="p-article">${ic("article")}مضمون</button>
+      <button class="tab" role="tab" data-tab="qa" aria-controls="p-qa">${ic("chat")}سوال و جواب</button>
+      <button class="tab" role="tab" data-tab="quiz" aria-controls="p-quiz">${ic("quiz")}MCQs</button>
+      <button class="tab" role="tab" data-tab="cards" aria-controls="p-cards">${ic("cards")}فلیش کارڈز</button>
+      <button class="tab" role="tab" data-tab="myths" aria-controls="p-myths">${ic("bulb")}غلط فہمیاں</button>
+    </div>
+    <div class="pops">
+      <button class="pop-btn" type="button" data-pop="popGoals" aria-expanded="false">${ic("target")}اہداف</button>
+      <button class="pop-btn" type="button" data-pop="popToc" aria-expanded="false">${ic("toc")}فہرست</button>
+    </div>
+    <div class="pop card hidden" id="popGoals"><p class="box-title">اس موضوع کو پڑھ کر آپ</p><ul>${t.objectives.map((o) => `<li>${rich(o)}</li>`).join("")}</ul></div>
+    <nav class="pop card toc hidden" id="popToc" aria-label="فہرستِ مضامین"><p class="box-title">مضمون کی فہرست</p>${toc.map(([id, h, part]) => `<a href="#${id}"${part ? ' class="toc-part"' : ""}>${rich(h)}</a>`).join("")}<a href="#summary">اہم نکات</a></nav>
   </div>
 
   <section class="panel" id="p-article" role="tabpanel" aria-label="مضمون">
-    <div class="layout">
-      <div>
-        <div class="card objectives"><p class="box-title">${ic("target")}اس موضوع کے اہداف: اسے پڑھ کر آپ</p><ul>${t.objectives.map((o) => `<li>${rich(o)}</li>`).join("")}</ul></div>
-        <div class="examq"><b>${ic("pen")}امتحانی سوال:</b> ${rich(t.examQ)}</div>
-        <article class="article">${art}</article>
-        <div id="article-end"></div>
-        <div class="card summary-box section" id="summary"><p class="box-title">${ic("star")}اہم نکات (دہرائی کے لیے)</p><ol>${t.summary.map((s) => `<li>${rich(s)}</li>`).join("")}</ol></div>
-        <div class="card terms section" id="terms"><p class="box-title">${ic("tag")}اہم اصطلاحات</p><dl>${t.terms.map((x) => `<dt>${esc(x.t)}</dt><dd>${rich(x.d)}</dd>`).join("")}</dl></div>
-        <div class="card readings section" id="readings"><p class="box-title">${ic("books")}مزید مطالعہ</p><ul>${t.readings.map((r) => `<li><b>${/[A-Za-z]/.test(r.t) ? `<span class="ltr">${esc(r.t)}</span>` : esc(r.t)}</b> — ${esc(r.a)}<br><span class="muted small">${esc(r.n)}</span></li>`).join("")}</ul></div>
-        <div class="done-row"><button class="btn" id="readBtn" type="button">مکمل پڑھ لیا — نشان لگائیں</button><a class="btn gold" href="#quiz" onclick="document.querySelector('[data-tab=quiz]').click();return false;">${ic("quiz")}اب کوئز حل کریں</a></div>
-      </div>
-      <aside class="aside">
-        <nav class="card toc" aria-label="فہرستِ مضامین"><p class="box-title">${ic("toc")}اس مضمون میں</p>${toc.map(([id, h, part]) => `<a href="#${id}"${part ? ' style="color:var(--gold);font-weight:700"' : ""}>${rich(h)}</a>`).join("")}<a href="#summary">اہم نکات</a><a href="#terms">اصطلاحات</a><a href="#readings">مزید مطالعہ</a></nav>
-      </aside>
-    </div>
+    <div class="examq"><b>سوال:</b> ${rich(t.examQ)}</div>
+    <article class="article">${art}</article>
+    <div id="article-end"></div>
+    <details class="more" id="summary"><summary>${ic("star")}اہم نکات (دہرائی کے لیے)</summary><ol>${t.summary.map((x) => `<li>${rich(x)}</li>`).join("")}</ol></details>
+    <details class="more" id="terms"><summary>${ic("tag")}اہم اصطلاحات</summary><dl class="terms">${t.terms.map((x) => `<dt>${esc(x.t)}</dt><dd>${rich(x.d)}</dd>`).join("")}</dl></details>
+    <details class="more" id="readings"><summary>${ic("books")}مزید مطالعہ</summary><ul>${t.readings.map((r) => `<li><b>${/[A-Za-z]/.test(r.t) ? `<span class="ltr">${esc(r.t)}</span>` : esc(r.t)}</b> — ${esc(r.a)}<br><span class="muted small">${esc(r.n)}</span></li>`).join("")}</ul></details>
+    <div class="done-row"><button class="btn" id="readBtn" type="button">مکمل پڑھ لیا</button><button class="btn gold" type="button" data-go="quiz">${ic("quiz")}MCQs حل کریں</button></div>
   </section>
 
   <section class="panel" id="p-qa" role="tabpanel" aria-label="سوال و جواب">
-    <div class="row" style="margin-bottom:10px"><p class="muted small" style="margin:0">امتحان کی تیاری کے لیے مختصر اور تفصیلی سوالات۔ سوال پر کلک کر کے جواب دیکھیں۔</p><span class="spacer"></span><button class="btn ghost" id="qaToggle" type="button">سب کھولیں</button></div>
-    ${t.qa.map((q, i) => `<details class="qa"${i === 0 ? " open" : ""}><summary><span class="qn">${i + 1}۔</span><span>${rich(q.q)} <span class="pill ${kinds[q.k] || ""} lvl">${esc(q.k)}</span></span><span class="chev" aria-hidden="true">▾</span></summary><div class="ans">${richBlock(q.a)}</div></details>`).join("\n")}
+    <div class="row panel-head"><span class="muted small">سوال پر کلک کر کے جواب دیکھیں۔</span><span class="spacer"></span><button class="btn ghost sm" id="qaToggle" type="button">سب کھولیں</button></div>
+    ${t.qa.map((q, i) => `<details class="qa"><summary><span class="qn">${i + 1}۔</span><span class="qt">${rich(q.q)} <span class="pill ${kinds[q.k] || ""} lvl">${esc(q.k)}</span></span><span class="chev" aria-hidden="true">▾</span></summary><div class="ans">${richBlock(q.a)}</div></details>`).join("\n")}
   </section>
 
-  <section class="panel" id="p-myths" role="tabpanel" aria-label="غلط فہمیاں اور غور و فکر">
-    <h2 class="section-title">${ic("alert")}عام غلط فہمیاں اور حقیقت</h2>
-    ${t.myths.map((x) => `<div class="myth"><div class="m"><b>غلط فہمی:</b>${rich(x.m)}</div><div class="f"><b>حقیقت:</b>${rich(x.f)}</div></div>`).join("")}
-    <div class="card section reflect"><h2 class="section-title">${ic("users")}غور و فکر اور کلاس مباحثہ</h2><ol>${t.reflect.map((r) => `<li>${rich(r)}</li>`).join("")}</ol></div>
+  <section class="panel" id="p-quiz" role="tabpanel" aria-label="MCQs">
+    <div id="quizRoot"></div>
   </section>
 
   <section class="panel" id="p-cards" role="tabpanel" aria-label="فلیش کارڈز">
-    <p class="muted small">اصطلاحات اور مختصر سوالات کے کارڈ۔ پہلے خود جواب سوچیں، پھر کارڈ پلٹ کر دیکھیں۔</p>
     <div id="cardsRoot"></div>
     <script type="application/json" id="cardsData">${JSON.stringify(cards).replace(/</g, "\\u003c")}</script>
   </section>
 
-  <section class="panel" id="p-quiz" role="tabpanel" aria-label="کوئز">
-    <p class="muted small">ہر جواب کے بعد وضاحت ظاہر ہوگی۔ ہر بار آپشنز کی ترتیب بدل جاتی ہے۔ غلط جوابات "میری پیش رفت" میں دہرائی کے لیے محفوظ ہو جاتے ہیں۔</p>
-    <div id="quizRoot"></div>
+  <section class="panel" id="p-myths" role="tabpanel" aria-label="غلط فہمیاں">
+    ${t.myths.map((x) => `<div class="myth"><div class="m"><b>غلط فہمی:</b> ${rich(x.m)}</div><div class="f"><b>حقیقت:</b> ${rich(x.f)}</div></div>`).join("")}
+    <details class="more"><summary>${ic("users")}غور و فکر اور کلاس مباحثہ</summary><ol>${t.reflect.map((r) => `<li>${rich(r)}</li>`).join("")}</ol></details>
   </section>
 
   <nav class="pn" aria-label="اگلا اور پچھلا موضوع">
-    ${prev ? `<a class="card prev" href="${prev.url}"><small>→ پچھلا موضوع</small>${prev.num}. ${esc(prev.title)}</a>` : "<span></span>"}
-    ${next ? `<a class="card next" href="${next.url}"><small>اگلا موضوع ←</small>${next.num}. ${esc(next.title)}</a>` : `<a class="card next" href="exam.html"><small>کورس مکمل ←</small>فائنل امتحان دیں</a>`}
+    ${prev ? `<a class="card prev" href="${prev.url}"><small>→ پچھلا</small>${prev.num}. ${esc(prev.title)}</a>` : "<span></span>"}
+    ${next ? `<a class="card next" href="${next.url}"><small>اگلا ←</small>${next.num}. ${esc(next.title)}</a>` : `<a class="card next" href="exam.html"><small>کورس مکمل ←</small>فائنل امتحان دیں</a>`}
   </nav>
 </div>`;
   const ld = { "@context": "https://schema.org", "@type": "LearningResource", name: t.fullTitle, inLanguage: "ur", educationalLevel: "University", description: t.intro, isPartOf: { "@type": "Course", name: CFG.siteName } };
@@ -304,60 +294,21 @@ function topicPage(t) {
 }
 
 // ---------------- home ----------------
-function topicCard(m) {
-  return `<a class="card topic-card" data-t="${m.num}" href="${m.url}"><span class="tnum">${tic(m.num)}<i>${m.num}</i></span><span><h3>${m.num}. ${esc(m.title)}</h3><p>${esc(m.intro)}</p><span class="meta"><span class="pill">${ic("clock")}${m.read} منٹ</span><span class="pill">${ic("quiz")}${m.mcq} MCQs</span><span class="qscore"></span></span></span></a>`;
-}
 function home() {
-  const feats = [
-    ["syllabus.html", ic("list"), "نصاب اور مضامین", "15 موضوعات، آسان اور مربوط زبان میں، خاکوں اور قرآنی حوالوں کے ساتھ"],
-    ["syllabus.html", ic("chat"), "سوال و جواب", "ہر موضوع پر مختصر، تفصیلی اور تجزیاتی امتحانی سوالات"],
-    ["exam.html", ic("exam"), "فائنل امتحان", "تمام موضوعات سے ملے جلے سوالات، ٹائمر اور نتیجے کے تجزیے کے ساتھ"],
-    ["progress.html", ic("chart"), "میری پیش رفت", "پڑھے گئے موضوعات، کوئز کے نمبر اور غلط سوالات کی دہرائی"],
-    ["glossary.html", ic("dict"), "فرہنگِ اصطلاحات", `${stats.terms} اہم اصطلاحات کی آسان تعریفیں، ایک جگہ`],
-    ["timeline.html", ic("map"), "ٹائم لائن اور نقشہ", "مسلم سائنسدانوں کا زمانہ اور علمی مراکز کا نقشہ"],
-    ["search.html", ic("search"), "تلاش", "پورے کورس میں کوئی بھی لفظ یا نام تلاش کریں"],
-    ["syllabus.html", ic("cards"), "فلیش کارڈز", "اصطلاحات اور اہم نکات کی تیز دہرائی"],
-  ];
+  const links = [["syllabus.html", "list", "نصاب"], ["exam.html", "exam", "فائنل امتحان"], ["glossary.html", "dict", "فرہنگ"], ["timeline.html", "map", "ٹائم لائن و نقشہ"], ["progress.html", "chart", "میری پیش رفت"], ["search.html", "search", "تلاش"]];
   const body = `
-<div class="wrap">
+<div class="wrap narrow">
   <section class="hero">
-    <p class="eyebrow">${I.logo.replace("<svg", '<svg class="eyebrow-logo"')}${esc(CFG.orgName)}</p>
+    <p class="eyebrow">${esc(CFG.orgName)}</p>
     <h1>${esc(CFG.courseName)}</h1>
-    <p>${esc(CFG.description)}</p>
-    <div class="row"><a class="btn gold" href="${META[0].url}">${ic("play")}پہلا موضوع شروع کریں</a><a class="btn ghost" href="syllabus.html">${ic("list")}مکمل نصاب دیکھیں</a></div>
-    <div class="stats">
-      <div class="stat">${ic("layers","st-ic")}<b>${stats.topics}</b><span>موضوعات</span></div>
-      <div class="stat">${ic("chat","st-ic")}<b>${stats.qa}</b><span>سوال و جواب</span></div>
-      <div class="stat">${ic("quiz","st-ic")}<b>${stats.mcq}</b><span>MCQs مع وضاحت</span></div>
-      <div class="stat">${ic("tag","st-ic")}<b>${stats.terms}</b><span>اصطلاحات</span></div>
-    </div>
+    <p>ایک جامع اردو کورس: ${N} موضوعات، آسان مضامین، امتحانی سوال و جواب اور MCQs۔</p>
+    <div class="row hero-btns"><a class="btn gold" id="contLink" href="${META[0].url}">${ic("play")}<span id="contLabel">کورس شروع کریں</span></a><a class="btn ghost" href="syllabus.html">${ic("list")}مکمل نصاب</a></div>
+    <div class="hero-progress"><div class="meter"><span data-read-meter style="width:0"></span></div><span class="small muted">پڑھ لیے: <span data-read-count>0 / ${N}</span></span><span id="contTitle" class="hidden"></span></div>
   </section>
 
-  <section class="section card continue" aria-label="پیش رفت">
-    <div><p class="box-title">${ic("play")}<span id="contLabel">کورس کا آغاز یہاں سے کریں</span></p><a id="contLink" href="${META[0].url}"><b id="contTitle">1. ${esc(META[0].title)}</b></a></div>
-    <div class="meter" aria-hidden="true"><span data-read-meter style="width:0"></span></div>
-    <span class="pill ok">پڑھ لیے: <span data-read-count>0 / ${N}</span></span>
-  </section>
+  <nav class="quick" aria-label="فوری روابط">${links.map(([h, i, l]) => `<a href="${h}">${ic(i)}<span>${l}</span></a>`).join("")}</nav>
 
-  <section class="section"><h2 class="section-title">${ic("settings")}اس ویب سائٹ پر آپ کیا کر سکتے ہیں</h2>
-    <div class="grid grid-4">${feats.map(([h, ic, t, p]) => `<a class="card feature" href="${h}"><span class="fi">${ic}</span><span><h3>${t}</h3><p>${p}</p></span></a>`).join("")}</div>
-  </section>
-
-  <section class="section"><h2 class="section-title">${ic("layers")}کورس کا ڈھانچہ</h2>
-    ${extras.units.map((u) => `<div class="unit"><h2>${esc(u.name)}</h2><div class="grid grid-2">${u.topics.map((n) => topicCard(META[n - 1])).join("")}</div></div>`).join("")}
-  </section>
-
-  <section class="section card">
-    <h2 class="section-title">${ic("bulb")}پڑھنے کا بہترین طریقہ</h2>
-    <ol>
-      <li>موضوع کے شروع میں <b>اہداف</b> اور <b>امتحانی سوال</b> پڑھیں۔</li>
-      <li>مضمون پڑھیں، پھر <b>اہم نکات</b> اور <b>اصطلاحات</b> دہرائیں۔</li>
-      <li><b>سوال و جواب</b> میں جواب دیکھنے سے پہلے خود جواب سوچیں۔</li>
-      <li><b>غلط فہمیاں</b> والا حصہ پڑھیں اور دوستوں سے <b>غور و فکر</b> کے سوالات پر بات کریں۔</li>
-      <li><b>کوئز</b> حل کریں اور غلط جوابات کی وضاحت پڑھیں۔</li>
-      <li>آخر میں <b>فائنل امتحان</b> دیں اور <b>میری پیش رفت</b> میں غلط سوالات دہرائیں۔</li>
-    </ol>
-  </section>
+  ${extras.units.map((u, ui) => `<section class="unit"><h2>${esc(u.name)}</h2><div class="syl-list">${u.topics.map((n) => syllabusRow(META[n - 1], ui + 1)).join("")}</div></section>`).join("")}
 </div>`;
   const ld = { "@context": "https://schema.org", "@type": "Course", name: CFG.siteName, description: CFG.description, inLanguage: "ur", provider: { "@type": "Organization", name: "Al-Hayat Research Institute of Social Sciences", url: "https://institute.drimranhayat.com/" }, hasPart: META.map((m) => ({ "@type": "LearningResource", name: m.fullTitle, url: abs(m.url) || m.url })) };
   return shell({ file: "index.html", page: "home", title: CFG.siteName, desc: CFG.description, body, active: "home", extraHead: `<script type="application/ld+json">${JSON.stringify(ld)}</script>` });
@@ -366,15 +317,14 @@ function home() {
 // ---------------- syllabus ----------------
 function syllabusRow(m, u) {
   return `<div class="syl-row u${u}" data-t="${m.num}">
-  <a class="syl-main" href="${m.url}"><span class="snum">${m.num}</span><span class="stitle"><b>${ic("t" + m.num, "ic sic")}${esc(m.title)}</b><small>${esc(m.intro)}</small></span></a>
+  <a class="syl-main" href="${m.url}"><span class="snum">${m.num}</span><span class="stitle"><b>${esc(m.title)}</b></span></a>
   <span class="syl-actions"><span class="qscore"></span><a class="pill p-art" href="${m.url}#article">مضمون</a><a class="pill p-qa" href="${m.url}#qa">سوال و جواب</a><a class="pill p-mcq" href="${m.url}#quiz">MCQs</a></span>
 </div>`;
 }
 function syllabus() {
   const body = `
-<div class="wrap">
-  <div class="page-head"><h1><span class="h-ic">${ic("list")}</span>نصاب — ${N} موضوعات</h1><p>کورس چار حصوں میں ہے۔ ہر موضوع میں مضمون، سوال و جواب، غلط فہمیاں، فلیش کارڈز اور کوئز شامل ہیں۔</p>
-  <div class="row" style="margin-top:8px"><div class="meter" style="max-width:360px"><span data-read-meter style="width:0"></span></div><span class="pill ok">پڑھ لیے: <span data-read-count>0 / ${N}</span></span></div></div>
+<div class="wrap narrow">
+  <div class="page-head"><h1><span class="h-ic">${ic("list")}</span>نصاب — ${N} موضوعات</h1><p>ہر موضوع کے سامنے بٹن سے سیدھا مضمون، سوال و جواب یا MCQs کھولیں۔</p></div>
   ${extras.units.map((u, ui) => `<div class="unit"><h2>${esc(u.name)}</h2><div class="syl-list">${u.topics.map((n) => syllabusRow(META[n - 1], ui + 1)).join("")}</div></div>`).join("")}
 </div>`;
   return shell({ file: "syllabus.html", page: "syllabus", title: "نصاب", desc: `اسلام اور سائنس کورس کا مکمل نصاب: ${N} موضوعات۔`, body, active: "syllabus" });
