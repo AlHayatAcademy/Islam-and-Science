@@ -76,16 +76,66 @@ const I = {
   cards: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>`,
 };
 
+// Line-icon set (24x24, stroke). ic(name) returns an inline SVG with class "ic".
+const P = {
+  home: '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  list: '<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',
+  dict: '<path d="M4 4h10a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M8 9h6M8 13h4"/>',
+  map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  exam: '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  chart: '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+  article: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h7"/>',
+  chat: '<path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/><path d="M9 10h6M9 13h4"/>',
+  bulb: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+  cards: '<rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/>',
+  quiz: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>',
+  pen: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+  star: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+  tag: '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/>',
+  books: '<path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="m16 5 3.8-1 2.2 15.5-3.8 1z"/>',
+  toc: '<path d="M4 6h16M4 12h10M4 18h13"/>',
+  alert: '<path d="M12 3 2 20h20z"/><path d="M12 9v5"/><circle cx="12" cy="17" r=".6" fill="currentColor"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  play: '<circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z" fill="currentColor"/>',
+  layers: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
+  trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 5H4a3 3 0 0 0 4 4M16 5h4a3 3 0 0 1-4 4M12 13v4M8 21h8M10 17h4v4h-4z"/>',
+  refresh: '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  pin: '<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
+  // topic icons
+  t1: '<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>',
+  t2: '<path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7 15h10"/>',
+  t3: '<path d="M12 3v18M5 21h14"/><path d="M4 7h16"/><path d="m4 7-3 7a3.5 3.5 0 0 0 6 0zM20 7l-3 7a3.5 3.5 0 0 0 6 0z"/>',
+  t4: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+  t5: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  t6: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="m17 3 .7 1.6 1.8.2-1.3 1.2.4 1.8-1.6-.9-1.6.9.4-1.8L14.5 4.8l1.8-.2z"/>',
+  t7: '<path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/><path d="M3 12h4l2-3 3 6 2-3h7"/>',
+  t8: '<path d="M3 21h18M5 21V10M19 21V10M9 21v-6M15 21v-6"/><path d="M3 10a9 7 0 0 1 18 0z"/>',
+  t9: '<path d="M18 4H6l6 8-6 8h12"/>',
+  t10: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  t11: '<path d="M5 3v6a5 5 0 0 0 10 0V3"/><path d="M10 14v2a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="12" r="2"/>',
+  t12: '<path d="M6 3h12M6 21h12M7 3v4l5 5-5 5v4M17 3v4l-5 5 5 5v4"/>',
+  t13: '<circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>',
+  t14: '<path d="M7 3c0 6 10 6 10 12s-10 6-10 6M17 3c0 6-10 6-10 12s10 6 10 6"/><path d="M8 6h8M8 18h8M9.5 9h5M9.5 15h5"/>',
+  t15: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+};
+const ic = (n, cls = "ic") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ""}</svg>`;
+const tic = (num, cls = "ic") => ic("t" + num, cls);
+
 // ---------------- page shell ----------------
 const NAV = [
-  ["index.html", "ہوم", "home"], ["syllabus.html", "نصاب", "syllabus"], ["glossary.html", "فرہنگ", "glossary"],
-  ["timeline.html", "ٹائم لائن و نقشہ", "timeline"], ["exam.html", "فائنل امتحان", "exam"], ["progress.html", "میری پیش رفت", "progress"],
+  ["index.html", "ہوم", "home", "home"], ["syllabus.html", "نصاب", "syllabus", "list"], ["glossary.html", "فرہنگ", "glossary", "dict"],
+  ["timeline.html", "ٹائم لائن و نقشہ", "timeline", "map"], ["exam.html", "فائنل امتحان", "exam", "exam"], ["progress.html", "میری پیش رفت", "progress", "chart"],
 ];
 function shell({ file, page, title, desc, body, active, extraHead = "", scripts = [], bodyAttrs = "", ogType = "website" }) {
   const full = title === CFG.siteName ? title : `${title} — ${CFG.siteName}`;
   const canonical = abs(file === "index.html" ? "" : file);
   const og = abs("og.png");
-  const nav = NAV.map(([h, l, k]) => `<a href="${h}"${k === active ? ' class="active" aria-current="page"' : ""}>${l}</a>`).join("");
+  const nav = NAV.map(([h, l, k, icn]) => `<a href="${h}"${k === active ? ' class="active" aria-current="page"' : ""}>${ic(icn)}${l}</a>`).join("");
   return `<!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
@@ -115,7 +165,7 @@ ${extraHead}
 <a class="skip" href="#main">مواد پر جائیں</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="index.html">${I.logo}<span>${esc(CFG.siteName)}</span></a>
+    <a class="brand" href="index.html" aria-label="${esc(CFG.siteName)}">${I.logo}<span class="brand-text"><b>${esc(CFG.orgName)}</b><small>${esc(CFG.courseName)}</small></span></a>
     <nav class="main-nav" id="mainNav" aria-label="مرکزی مینو">${nav}</nav>
     <div class="tools">
       <a class="icon-btn" href="search.html" aria-label="تلاش" title="تلاش">${I.search}</a>
@@ -131,7 +181,7 @@ ${extraHead}
 ${body}
 </main>
 <footer class="site-footer">
-  <p>${esc(CFG.siteName)} — ${esc(CFG.tagline)}</p>
+  <p>${I.logo.replace("<svg", '<svg class="foot-logo"')} <b>${esc(CFG.orgName)}</b> — ${esc(CFG.courseName)}: ${esc(CFG.tagline)}</p>
   <p class="en">Powered by <a href="https://institute.drimranhayat.com/" target="_blank" rel="noopener">Al-Hayat Research Institute of Social Sciences</a> · <a href="https://drimranhayat.com/" target="_blank" rel="noopener">drimranhayat.com</a> · <a href="https://drimranhayat.com/contact" target="_blank" rel="noopener">Contact</a></p>
 </footer>
 <script src="data/meta.js"></script>
@@ -183,37 +233,37 @@ function topicPage(t) {
 <div class="wrap">
   <div class="topic-head">
     <div class="crumbs"><a href="index.html">ہوم</a> › <a href="syllabus.html">نصاب</a> › موضوع ${t.num}</div>
-    <h1>${t.num}. ${esc(t.fullTitle)}</h1>
+    <h1><span class="h-ic">${tic(t.num)}</span>${t.num}. ${esc(t.fullTitle)}</h1>
     <div class="row">
-      <span class="pill teal">${I.clock.replace("<svg", '<svg style="width:14px;height:14px;vertical-align:middle"')} تقریباً ${m.read} منٹ مطالعہ</span>
-      <span class="pill">${t.qa.length} سوال و جواب</span><span class="pill">${t.mcq.length} MCQs</span><span class="pill">${t.terms.length} اصطلاحات</span>
+      <span class="pill teal">${ic("clock")}تقریباً ${m.read} منٹ مطالعہ</span>
+      <span class="pill">${ic("chat")}${t.qa.length} سوال و جواب</span><span class="pill">${ic("quiz")}${t.mcq.length} MCQs</span><span class="pill">${ic("tag")}${t.terms.length} اصطلاحات</span>
       <span class="spacer"></span>
       <label class="small muted" for="topicSelect" style="white-space:nowrap">موضوع بدلیں:</label>
       <select id="topicSelect" style="width:auto;max-width:260px">${META.map((x) => `<option value="${x.url}"${x.num === t.num ? " selected" : ""}>${x.num}. ${esc(x.title)}</option>`).join("")}</select>
     </div>
   </div>
   <div class="tabs" role="tablist" aria-label="موضوع کے حصے">
-    <button class="tab" role="tab" data-tab="article" aria-controls="p-article">مضمون</button>
-    <button class="tab" role="tab" data-tab="qa" aria-controls="p-qa">سوال و جواب</button>
-    <button class="tab" role="tab" data-tab="myths" aria-controls="p-myths">غلط فہمیاں اور غور و فکر</button>
-    <button class="tab" role="tab" data-tab="cards" aria-controls="p-cards">فلیش کارڈز</button>
-    <button class="tab" role="tab" data-tab="quiz" aria-controls="p-quiz">کوئز (${t.mcq.length})</button>
+    <button class="tab" role="tab" data-tab="article" aria-controls="p-article">${ic("article")}مضمون</button>
+    <button class="tab" role="tab" data-tab="qa" aria-controls="p-qa">${ic("chat")}سوال و جواب</button>
+    <button class="tab" role="tab" data-tab="myths" aria-controls="p-myths">${ic("bulb")}غلط فہمیاں اور غور و فکر</button>
+    <button class="tab" role="tab" data-tab="cards" aria-controls="p-cards">${ic("cards")}فلیش کارڈز</button>
+    <button class="tab" role="tab" data-tab="quiz" aria-controls="p-quiz">${ic("quiz")}کوئز (${t.mcq.length})</button>
   </div>
 
   <section class="panel" id="p-article" role="tabpanel" aria-label="مضمون">
     <div class="layout">
       <div>
-        <div class="card objectives"><p class="box-title">اس موضوع کے اہداف: اسے پڑھ کر آپ</p><ul>${t.objectives.map((o) => `<li>${rich(o)}</li>`).join("")}</ul></div>
-        <div class="examq"><b>امتحانی سوال:</b> ${rich(t.examQ)}</div>
+        <div class="card objectives"><p class="box-title">${ic("target")}اس موضوع کے اہداف: اسے پڑھ کر آپ</p><ul>${t.objectives.map((o) => `<li>${rich(o)}</li>`).join("")}</ul></div>
+        <div class="examq"><b>${ic("pen")}امتحانی سوال:</b> ${rich(t.examQ)}</div>
         <article class="article">${art}</article>
         <div id="article-end"></div>
-        <div class="card summary-box section" id="summary"><p class="box-title">اہم نکات (دہرائی کے لیے)</p><ol>${t.summary.map((s) => `<li>${rich(s)}</li>`).join("")}</ol></div>
-        <div class="card terms section" id="terms"><p class="box-title">اہم اصطلاحات</p><dl>${t.terms.map((x) => `<dt>${esc(x.t)}</dt><dd>${rich(x.d)}</dd>`).join("")}</dl></div>
-        <div class="card readings section" id="readings"><p class="box-title">مزید مطالعہ</p><ul>${t.readings.map((r) => `<li><b>${/[A-Za-z]/.test(r.t) ? `<span class="ltr">${esc(r.t)}</span>` : esc(r.t)}</b> — ${esc(r.a)}<br><span class="muted small">${esc(r.n)}</span></li>`).join("")}</ul></div>
-        <div class="done-row"><button class="btn" id="readBtn" type="button">مکمل پڑھ لیا — نشان لگائیں</button><a class="btn gold" href="#quiz" onclick="document.querySelector('[data-tab=quiz]').click();return false;">اب کوئز حل کریں</a></div>
+        <div class="card summary-box section" id="summary"><p class="box-title">${ic("star")}اہم نکات (دہرائی کے لیے)</p><ol>${t.summary.map((s) => `<li>${rich(s)}</li>`).join("")}</ol></div>
+        <div class="card terms section" id="terms"><p class="box-title">${ic("tag")}اہم اصطلاحات</p><dl>${t.terms.map((x) => `<dt>${esc(x.t)}</dt><dd>${rich(x.d)}</dd>`).join("")}</dl></div>
+        <div class="card readings section" id="readings"><p class="box-title">${ic("books")}مزید مطالعہ</p><ul>${t.readings.map((r) => `<li><b>${/[A-Za-z]/.test(r.t) ? `<span class="ltr">${esc(r.t)}</span>` : esc(r.t)}</b> — ${esc(r.a)}<br><span class="muted small">${esc(r.n)}</span></li>`).join("")}</ul></div>
+        <div class="done-row"><button class="btn" id="readBtn" type="button">مکمل پڑھ لیا — نشان لگائیں</button><a class="btn gold" href="#quiz" onclick="document.querySelector('[data-tab=quiz]').click();return false;">${ic("quiz")}اب کوئز حل کریں</a></div>
       </div>
       <aside class="aside">
-        <nav class="card toc" aria-label="فہرستِ مضامین"><p class="box-title">اس مضمون میں</p>${toc.map(([id, h, part]) => `<a href="#${id}"${part ? ' style="color:var(--gold);font-weight:700"' : ""}>${rich(h)}</a>`).join("")}<a href="#summary">اہم نکات</a><a href="#terms">اصطلاحات</a><a href="#readings">مزید مطالعہ</a></nav>
+        <nav class="card toc" aria-label="فہرستِ مضامین"><p class="box-title">${ic("toc")}اس مضمون میں</p>${toc.map(([id, h, part]) => `<a href="#${id}"${part ? ' style="color:var(--gold);font-weight:700"' : ""}>${rich(h)}</a>`).join("")}<a href="#summary">اہم نکات</a><a href="#terms">اصطلاحات</a><a href="#readings">مزید مطالعہ</a></nav>
       </aside>
     </div>
   </section>
@@ -224,9 +274,9 @@ function topicPage(t) {
   </section>
 
   <section class="panel" id="p-myths" role="tabpanel" aria-label="غلط فہمیاں اور غور و فکر">
-    <h2 class="section-title">عام غلط فہمیاں اور حقیقت</h2>
+    <h2 class="section-title">${ic("alert")}عام غلط فہمیاں اور حقیقت</h2>
     ${t.myths.map((x) => `<div class="myth"><div class="m"><b>غلط فہمی:</b>${rich(x.m)}</div><div class="f"><b>حقیقت:</b>${rich(x.f)}</div></div>`).join("")}
-    <div class="card section reflect"><h2 class="section-title">غور و فکر اور کلاس مباحثہ</h2><ol>${t.reflect.map((r) => `<li>${rich(r)}</li>`).join("")}</ol></div>
+    <div class="card section reflect"><h2 class="section-title">${ic("users")}غور و فکر اور کلاس مباحثہ</h2><ol>${t.reflect.map((r) => `<li>${rich(r)}</li>`).join("")}</ol></div>
   </section>
 
   <section class="panel" id="p-cards" role="tabpanel" aria-label="فلیش کارڈز">
@@ -251,49 +301,50 @@ function topicPage(t) {
 
 // ---------------- home ----------------
 function topicCard(m) {
-  return `<a class="card topic-card" data-t="${m.num}" href="${m.url}"><span class="tnum">${m.num}</span><span><h3>${esc(m.title)}</h3><p>${esc(m.intro)}</p><span class="meta"><span class="pill">${m.read} منٹ</span><span class="pill">${m.mcq} MCQs</span><span class="qscore"></span></span></span></a>`;
+  return `<a class="card topic-card" data-t="${m.num}" href="${m.url}"><span class="tnum">${tic(m.num)}<i>${m.num}</i></span><span><h3>${m.num}. ${esc(m.title)}</h3><p>${esc(m.intro)}</p><span class="meta"><span class="pill">${ic("clock")}${m.read} منٹ</span><span class="pill">${ic("quiz")}${m.mcq} MCQs</span><span class="qscore"></span></span></span></a>`;
 }
 function home() {
   const feats = [
-    ["syllabus.html", I.list, "نصاب اور مضامین", "15 موضوعات، آسان اور مربوط زبان میں، خاکوں اور قرآنی حوالوں کے ساتھ"],
-    ["syllabus.html", I.book, "سوال و جواب", "ہر موضوع پر مختصر، تفصیلی اور تجزیاتی امتحانی سوالات"],
-    ["exam.html", I.check, "فائنل امتحان", "تمام موضوعات سے ملے جلے سوالات، ٹائمر اور نتیجے کے تجزیے کے ساتھ"],
-    ["progress.html", I.chart, "میری پیش رفت", "پڑھے گئے موضوعات، کوئز کے نمبر اور غلط سوالات کی دہرائی"],
-    ["glossary.html", I.dict, "فرہنگِ اصطلاحات", `${stats.terms} اہم اصطلاحات کی آسان تعریفیں، ایک جگہ`],
-    ["timeline.html", I.map, "ٹائم لائن اور نقشہ", "مسلم سائنسدانوں کا زمانہ اور علمی مراکز کا نقشہ"],
-    ["search.html", I.search, "تلاش", "پورے کورس میں کوئی بھی لفظ یا نام تلاش کریں"],
-    ["syllabus.html", I.cards, "فلیش کارڈز", "اصطلاحات اور اہم نکات کی تیز دہرائی"],
+    ["syllabus.html", ic("list"), "نصاب اور مضامین", "15 موضوعات، آسان اور مربوط زبان میں، خاکوں اور قرآنی حوالوں کے ساتھ"],
+    ["syllabus.html", ic("chat"), "سوال و جواب", "ہر موضوع پر مختصر، تفصیلی اور تجزیاتی امتحانی سوالات"],
+    ["exam.html", ic("exam"), "فائنل امتحان", "تمام موضوعات سے ملے جلے سوالات، ٹائمر اور نتیجے کے تجزیے کے ساتھ"],
+    ["progress.html", ic("chart"), "میری پیش رفت", "پڑھے گئے موضوعات، کوئز کے نمبر اور غلط سوالات کی دہرائی"],
+    ["glossary.html", ic("dict"), "فرہنگِ اصطلاحات", `${stats.terms} اہم اصطلاحات کی آسان تعریفیں، ایک جگہ`],
+    ["timeline.html", ic("map"), "ٹائم لائن اور نقشہ", "مسلم سائنسدانوں کا زمانہ اور علمی مراکز کا نقشہ"],
+    ["search.html", ic("search"), "تلاش", "پورے کورس میں کوئی بھی لفظ یا نام تلاش کریں"],
+    ["syllabus.html", ic("cards"), "فلیش کارڈز", "اصطلاحات اور اہم نکات کی تیز دہرائی"],
   ];
   const body = `
 <div class="wrap">
   <section class="hero">
-    <h1>اسلام اور سائنس</h1>
+    <p class="eyebrow">${I.logo.replace("<svg", '<svg class="eyebrow-logo"')}${esc(CFG.orgName)}</p>
+    <h1>${esc(CFG.courseName)}</h1>
     <p>${esc(CFG.description)}</p>
-    <div class="row"><a class="btn gold" href="${META[0].url}">پہلا موضوع شروع کریں</a><a class="btn ghost" href="syllabus.html">مکمل نصاب دیکھیں</a></div>
+    <div class="row"><a class="btn gold" href="${META[0].url}">${ic("play")}پہلا موضوع شروع کریں</a><a class="btn ghost" href="syllabus.html">${ic("list")}مکمل نصاب دیکھیں</a></div>
     <div class="stats">
-      <div class="stat"><b>${stats.topics}</b><span>موضوعات</span></div>
-      <div class="stat"><b>${stats.qa}</b><span>سوال و جواب</span></div>
-      <div class="stat"><b>${stats.mcq}</b><span>MCQs مع وضاحت</span></div>
-      <div class="stat"><b>${stats.terms}</b><span>اصطلاحات</span></div>
+      <div class="stat">${ic("layers","st-ic")}<b>${stats.topics}</b><span>موضوعات</span></div>
+      <div class="stat">${ic("chat","st-ic")}<b>${stats.qa}</b><span>سوال و جواب</span></div>
+      <div class="stat">${ic("quiz","st-ic")}<b>${stats.mcq}</b><span>MCQs مع وضاحت</span></div>
+      <div class="stat">${ic("tag","st-ic")}<b>${stats.terms}</b><span>اصطلاحات</span></div>
     </div>
   </section>
 
   <section class="section card continue" aria-label="پیش رفت">
-    <div><p class="box-title" id="contLabel">کورس کا آغاز یہاں سے کریں</p><a id="contLink" href="${META[0].url}"><b id="contTitle">1. ${esc(META[0].title)}</b></a></div>
+    <div><p class="box-title">${ic("play")}<span id="contLabel">کورس کا آغاز یہاں سے کریں</span></p><a id="contLink" href="${META[0].url}"><b id="contTitle">1. ${esc(META[0].title)}</b></a></div>
     <div class="meter" aria-hidden="true"><span data-read-meter style="width:0"></span></div>
     <span class="pill ok">پڑھ لیے: <span data-read-count>0 / ${N}</span></span>
   </section>
 
-  <section class="section"><h2 class="section-title">اس ویب سائٹ پر آپ کیا کر سکتے ہیں</h2>
+  <section class="section"><h2 class="section-title">${ic("settings")}اس ویب سائٹ پر آپ کیا کر سکتے ہیں</h2>
     <div class="grid grid-4">${feats.map(([h, ic, t, p]) => `<a class="card feature" href="${h}"><span class="fi">${ic}</span><span><h3>${t}</h3><p>${p}</p></span></a>`).join("")}</div>
   </section>
 
-  <section class="section"><h2 class="section-title">کورس کا ڈھانچہ</h2>
+  <section class="section"><h2 class="section-title">${ic("layers")}کورس کا ڈھانچہ</h2>
     ${extras.units.map((u) => `<div class="unit"><h2>${esc(u.name)}</h2><div class="grid grid-2">${u.topics.map((n) => topicCard(META[n - 1])).join("")}</div></div>`).join("")}
   </section>
 
   <section class="section card">
-    <h2 class="section-title">پڑھنے کا بہترین طریقہ</h2>
+    <h2 class="section-title">${ic("bulb")}پڑھنے کا بہترین طریقہ</h2>
     <ol>
       <li>موضوع کے شروع میں <b>اہداف</b> اور <b>امتحانی سوال</b> پڑھیں۔</li>
       <li>مضمون پڑھیں، پھر <b>اہم نکات</b> اور <b>اصطلاحات</b> دہرائیں۔</li>
@@ -312,7 +363,7 @@ function home() {
 function syllabus() {
   const body = `
 <div class="wrap">
-  <div class="page-head"><h1>نصاب — ${N} موضوعات</h1><p>کورس چار حصوں میں ہے۔ ہر موضوع میں مضمون، سوال و جواب، غلط فہمیاں، فلیش کارڈز اور کوئز شامل ہیں۔</p>
+  <div class="page-head"><h1><span class="h-ic">${ic("list")}</span>نصاب — ${N} موضوعات</h1><p>کورس چار حصوں میں ہے۔ ہر موضوع میں مضمون، سوال و جواب، غلط فہمیاں، فلیش کارڈز اور کوئز شامل ہیں۔</p>
   <div class="row" style="margin-top:8px"><div class="meter" style="max-width:360px"><span data-read-meter style="width:0"></span></div><span class="pill ok">پڑھ لیے: <span data-read-count>0 / ${N}</span></span></div></div>
   ${extras.units.map((u) => `<div class="unit"><h2>${esc(u.name)}</h2><div class="grid grid-2">${u.topics.map((n) => topicCard(META[n - 1])).join("")}</div></div>`).join("")}
 </div>`;
@@ -323,25 +374,25 @@ function syllabus() {
 function exam() {
   const body = `
 <div class="wrap">
-  <div class="page-head"><h1>فائنل امتحان</h1><p>تمام یا منتخب موضوعات سے ملے جلے سوالات۔ ہر بار سوالات اور آپشنز کی ترتیب نئی ہوتی ہے۔</p></div>
+  <div class="page-head"><h1><span class="h-ic">${ic("exam")}</span>فائنل امتحان</h1><p>تمام یا منتخب موضوعات سے ملے جلے سوالات۔ ہر بار سوالات اور آپشنز کی ترتیب نئی ہوتی ہے۔</p></div>
   <section id="examSetup" class="card section">
-    <p class="box-title">1. سوالات کی تعداد</p>
+    <p class="box-title">${ic("list")}1. سوالات کی تعداد</p>
     <div class="seg" id="examCount" role="group" aria-label="سوالات کی تعداد"><button type="button" data-v="20" aria-pressed="true">20</button><button type="button" data-v="40" aria-pressed="false">40</button><button type="button" data-v="60" aria-pressed="false">60</button><button type="button" data-v="100" aria-pressed="false">100</button></div>
-    <p class="box-title" style="margin-top:14px">2. ٹائمر (ہر سوال کے لیے ایک منٹ)</p>
+    <p class="box-title" style="margin-top:14px">${ic("clock")}2. ٹائمر (ہر سوال کے لیے ایک منٹ)</p>
     <div class="seg" id="examTimer" role="group" aria-label="ٹائمر"><button type="button" data-v="1" aria-pressed="true">ٹائمر کے ساتھ</button><button type="button" data-v="0" aria-pressed="false">بغیر ٹائمر</button></div>
-    <div class="row" style="margin-top:14px"><p class="box-title" style="margin:0">3. موضوعات</p><button type="button" class="btn ghost" id="examAll">سب منتخب / غیر منتخب</button></div>
+    <div class="row" style="margin-top:14px"><p class="box-title" style="margin:0">${ic("layers")}3. موضوعات</p><button type="button" class="btn ghost" id="examAll">سب منتخب / غیر منتخب</button></div>
     <div class="chk" id="examTopics" style="margin-top:8px"></div>
-    <div class="row" style="margin-top:18px"><button type="button" class="btn gold" id="examStart">امتحان شروع کریں</button></div>
+    <div class="row" style="margin-top:18px"><button type="button" class="btn gold" id="examStart">${ic("play")}امتحان شروع کریں</button></div>
   </section>
   <section id="examRun" class="hidden section">
     <div class="quiz-bar"><span id="examProg" class="score"></span><span class="spacer"></span><span id="examTimerOut" class="timer"></span></div>
     <div id="examQ"></div>
     <div class="row"><button type="button" class="btn ghost" id="examPrev">→ پچھلا</button><button type="button" class="btn ghost" id="examNext">اگلا ←</button><span class="spacer"></span><button type="button" class="btn gold" id="examSubmit">امتحان جمع کریں</button></div>
-    <div class="card section"><p class="box-title">سوالات کا نقشہ</p><div class="palette" id="examPalette"></div></div>
+    <div class="card section"><p class="box-title">${ic("map")}سوالات کا نقشہ</p><div class="palette" id="examPalette"></div></div>
   </section>
   <section id="examResult" class="hidden section">
     <div id="examSummary"></div>
-    <h2 class="section-title section">جوابات کا جائزہ اور وضاحتیں</h2>
+    <h2 class="section-title section">${ic("bulb")}جوابات کا جائزہ اور وضاحتیں</h2>
     <div id="examReview"></div>
   </section>
 </div>`;
@@ -352,24 +403,24 @@ function exam() {
 function progress() {
   const body = `
 <div class="wrap">
-  <div class="page-head"><h1>میری پیش رفت</h1><p>یہ معلومات صرف آپ کے اسی براؤزر میں محفوظ ہوتی ہیں۔</p></div>
+  <div class="page-head"><h1><span class="h-ic">${ic("chart")}</span>میری پیش رفت</h1><p>یہ معلومات صرف آپ کے اسی براؤزر میں محفوظ ہوتی ہیں۔</p></div>
   <div class="stats">
-    <div class="stat"><b id="pgRead">0</b><span>پڑھے گئے موضوعات</span></div>
-    <div class="stat"><b id="pgQuiz">0</b><span>مکمل کوئز</span></div>
-    <div class="stat"><b id="pgAvg">0%</b><span>کوئز کا اوسط</span></div>
-    <div class="stat"><b id="pgWrong">0</b><span>دہرائی کے سوال</span></div>
+    <div class="stat">${ic("article","st-ic")}<b id="pgRead">0</b><span>پڑھے گئے موضوعات</span></div>
+    <div class="stat">${ic("quiz","st-ic")}<b id="pgQuiz">0</b><span>مکمل کوئز</span></div>
+    <div class="stat">${ic("trophy","st-ic")}<b id="pgAvg">0%</b><span>کوئز کا اوسط</span></div>
+    <div class="stat">${ic("refresh","st-ic")}<b id="pgWrong">0</b><span>دہرائی کے سوال</span></div>
   </div>
   <div class="card section"><div class="row"><span class="box-title" style="margin:0">مجموعی پیش رفت</span><div class="meter"><span id="pgMeter" style="width:0"></span></div></div></div>
   <section class="card section">
-    <h2 class="section-title">غلط جوابات کی دہرائی</h2>
+    <h2 class="section-title">${ic("refresh")}غلط جوابات کی دہرائی</h2>
     <p class="muted">جن سوالات کے آپ نے غلط جواب دیے، وہ یہاں جمع ہوتے ہیں۔ درست جواب دینے پر سوال فہرست سے نکل جاتا ہے۔</p>
-    <button type="button" class="btn gold" id="pgWrongBtn">غلط سوالات کی مشق شروع کریں</button>
+    <button type="button" class="btn gold" id="pgWrongBtn">${ic("play")}غلط سوالات کی مشق شروع کریں</button>
   </section>
   <section id="pgReview" class="section hidden"><div id="pgReviewRoot"></div></section>
-  <section class="section"><h2 class="section-title">موضوع وار صورتِ حال</h2>
+  <section class="section"><h2 class="section-title">${ic("layers")}موضوع وار صورتِ حال</h2>
     <div class="table-wrap"><table><thead><tr><th>#</th><th>موضوع</th><th>مطالعہ</th><th>بہترین کوئز</th><th></th></tr></thead><tbody id="pgTable"></tbody></table></div>
   </section>
-  <section class="section"><h2 class="section-title">امتحانات کی تاریخ</h2>
+  <section class="section"><h2 class="section-title">${ic("calendar")}امتحانات کی تاریخ</h2>
     <div class="table-wrap"><table><thead><tr><th>تاریخ</th><th>نمبر</th><th>فیصد</th></tr></thead><tbody id="pgExams"></tbody></table></div>
   </section>
   <div class="row section"><button type="button" class="btn danger" id="pgReset">تمام پیش رفت صاف کریں</button></div>
@@ -388,8 +439,8 @@ function glossary() {
   const keys = Object.keys(groups);
   const body = `
 <div class="wrap">
-  <div class="page-head"><h1>فرہنگِ اصطلاحات</h1><p>کورس کی تمام اہم اصطلاحات، حروفِ تہجی کی ترتیب سے۔ ہر اصطلاح کے ساتھ متعلقہ موضوع کا لنک ہے۔</p></div>
-  <div class="card section"><label for="glFilter" class="box-title">اصطلاح تلاش کریں</label><input type="search" id="glFilter" placeholder="مثلاً: تسخیر، قرنطینہ، ریڈ شفٹ"><p class="muted small" id="glCount" style="margin:6px 0 0">${all.length} اصطلاحات</p>
+  <div class="page-head"><h1><span class="h-ic">${ic("dict")}</span>فرہنگِ اصطلاحات</h1><p>کورس کی تمام اہم اصطلاحات، حروفِ تہجی کی ترتیب سے۔ ہر اصطلاح کے ساتھ متعلقہ موضوع کا لنک ہے۔</p></div>
+  <div class="card section"><label for="glFilter" class="box-title">${ic("search")}اصطلاح تلاش کریں</label><input type="search" id="glFilter" placeholder="مثلاً: تسخیر، قرنطینہ، ریڈ شفٹ"><p class="muted small" id="glCount" style="margin:6px 0 0">${all.length} اصطلاحات</p>
   <div class="letters">${keys.map((k, i) => `<a href="#g${i}">${esc(k)}</a>`).join("")}</div></div>
   <div class="card">${keys.map((k, i) => `<div class="gl-group" id="g${i}"><h2 class="section-title" style="margin-top:14px">${esc(k)}</h2>${groups[k].map((x) => `<div class="gl-item"><h3>${esc(x.t)} <a class="pill teal" href="${slug(x.n)}#terms">موضوع ${x.n}</a></h3><p>${rich(x.d)}</p></div>`).join("")}</div>`).join("")}</div>
 </div>`;
@@ -426,12 +477,12 @@ function timeline() {
   const fields = [...new Set(extras.timeline.map((e) => e.f))];
   const body = `
 <div class="wrap">
-  <div class="page-head"><h1>ٹائم لائن اور نقشہ</h1><p>مسلم سائنسدانوں کا زمانہ، اہم تاریخی واقعات اور علمی مراکز۔ کسی نام یا مقام پر کلک کر کے متعلقہ موضوع پڑھیں۔</p></div>
-  <section class="section"><h2 class="section-title">علمی مراکز کا نقشہ</h2>
+  <div class="page-head"><h1><span class="h-ic">${ic("map")}</span>ٹائم لائن اور نقشہ</h1><p>مسلم سائنسدانوں کا زمانہ، اہم تاریخی واقعات اور علمی مراکز۔ کسی نام یا مقام پر کلک کر کے متعلقہ موضوع پڑھیں۔</p></div>
+  <section class="section"><h2 class="section-title">${ic("pin")}علمی مراکز کا نقشہ</h2>
     <div class="map-wrap"><div class="map">${mapSvg()}</div><div class="map-info card" id="mapInfo"><p class="muted" style="margin:0">نقشے پر کسی سنہری نقطے پر کلک کریں۔</p></div></div>
     <p class="muted small">نقشہ تقریبی ہے اور صرف تعلیمی مقصد کے لیے بنایا گیا ہے۔</p>
   </section>
-  <section class="section"><h2 class="section-title">ٹائم لائن (751ء تا 1938ء)</h2>
+  <section class="section"><h2 class="section-title">${ic("calendar")}ٹائم لائن (751ء تا 1938ء)</h2>
     <div class="filters" role="group" aria-label="شعبہ منتخب کریں"><button type="button" data-f="all" aria-pressed="true">سب</button>${fields.map((f) => `<button type="button" data-f="${esc(f)}" aria-pressed="false">${esc(f)}</button>`).join("")}</div>
     <div class="tl">${extras.timeline.map((e) => `<div class="tl-item${e.ev ? " ev" : ""}" data-f="${esc(e.f)}"><div class="card"><h3><span class="yr">${e.y === e.e ? e.y : e.y + "–" + e.e}</span> <a href="${slug(e.t)}">${esc(e.name)}</a> <span class="pill ${e.ev ? "gold" : "teal"}">${esc(e.f)}</span> <span class="pill">${esc(e.city)}</span></h3><p>${rich(e.d)}</p></div></div>`).join("")}</div>
   </section>
@@ -461,8 +512,8 @@ function searchIndex() {
 function search() {
   const body = `
 <div class="wrap">
-  <div class="page-head"><h1>تلاش</h1><p>پورے کورس میں مضامین، سوال و جواب، اصطلاحات اور غلط فہمیوں میں تلاش کریں۔</p></div>
-  <div class="card section"><label for="q" class="box-title">تلاش کا لفظ</label><input type="search" id="q" placeholder="مثلاً: ابن الہیثم، قرنطینہ، بگ بینگ، مقاصدِ شریعت" autocomplete="off"></div>
+  <div class="page-head"><h1><span class="h-ic">${ic("search")}</span>تلاش</h1><p>پورے کورس میں مضامین، سوال و جواب، اصطلاحات اور غلط فہمیوں میں تلاش کریں۔</p></div>
+  <div class="card section"><label for="q" class="box-title">${ic("search")}تلاش کا لفظ</label><input type="search" id="q" placeholder="مثلاً: ابن الہیثم، قرنطینہ، بگ بینگ، مقاصدِ شریعت" autocomplete="off"></div>
   <div class="card" id="results" aria-live="polite"></div>
 </div>`;
   return shell({ file: "search.html", page: "search", title: "تلاش", desc: "اسلام اور سائنس کورس کے تمام مواد میں تلاش۔", body, active: "", scripts: ["data/search.js"] });
@@ -484,18 +535,33 @@ write("data/meta.js", "window.TOPICS_META=" + JSON.stringify(META) + ";\n");
 write("data/mcq.js", "window.MCQ=" + JSON.stringify(MCQ) + ";\n");
 write("data/search.js", "window.SEARCH=" + JSON.stringify(searchIndex()) + ";\n");
 
-// service worker with precache list + version hash
-const precache = ["./", ...Object.keys(pages), "data/meta.js", "data/mcq.js", "data/search.js", "assets/css/style.css", "assets/js/app.js", "favicon.svg", "manifest.webmanifest", "fonts/NafeesNastaleeq.woff2", "fonts/Amiri-Regular.woff2", "fonts/Amiri-Bold.woff2", "icons/icon-192.png", "icons/icon-512.png"];
+// service worker: static assets precached; HTML pages network-first (safe with host "pretty URL" redirects)
+const precache = ["data/meta.js", "data/mcq.js", "data/search.js", "assets/css/style.css", "assets/js/app.js", "favicon.svg", "manifest.webmanifest", "fonts/NafeesNastaleeq.woff2", "fonts/Amiri-Regular.woff2", "fonts/Amiri-Bold.woff2", "icons/icon-192.png", "icons/icon-512.png"];
 const crypto = require("crypto");
-const ver = crypto.createHash("md5").update(precache.map((f) => { try { return fs.readFileSync(path.join(ROOT, f === "./" ? "index.html" : f)); } catch (e) { return ""; } }).join("|")).digest("hex").slice(0, 10);
+const ver = crypto.createHash("md5").update("rev3|" + [...precache, ...Object.keys(pages)].map((f) => { try { return fs.readFileSync(path.join(ROOT, f)); } catch (e) { return ""; } }).join("|")).digest("hex").slice(0, 10);
 write("sw.js", `// Generated by build.js — offline support
 const CACHE = "isc-${ver}";
-const FILES = ${JSON.stringify(precache)};
-self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())); });
+const ASSETS = ${JSON.stringify(precache)};
+self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => Promise.all(ASSETS.map((u) => fetch(u).then((r) => r.ok && !r.redirected ? c.put(u, r) : null).catch(() => null)))).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
+// store a clean (non-redirected) copy of a response
+function clean(res) { return res.blob().then((b) => new Response(b, { status: res.status, statusText: res.statusText, headers: res.headers })); }
+function pageKeys(url) { const u = new URL(url); u.search = ""; u.hash = ""; const p = u.pathname; const alts = [u.href]; if (p.endsWith(".html")) alts.push(u.origin + p.slice(0, -5)); else if (p.endsWith("/")) alts.push(u.origin + p + "index.html"); else alts.push(u.origin + p + ".html"); return alts; }
 self.addEventListener("fetch", (e) => {
-  if (e.request.method !== "GET" || new URL(e.request.url).origin !== location.origin) return;
-  e.respondWith(caches.match(e.request, { ignoreSearch: true }).then((r) => r || fetch(e.request).then((res) => { const cp = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, cp)); return res; }).catch(() => caches.match("404.html"))));
+  const req = e.request;
+  if (req.method !== "GET" || new URL(req.url).origin !== location.origin) return;
+  if (req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")) {
+    // network first: return the live response untouched (redirects work normally); keep a clean copy for offline use
+    e.respondWith(fetch(req).then((res) => {
+      if (res.ok && res.type === "basic") { const cp = res.clone(); clean(cp).then((r) => caches.open(CACHE).then((c) => c.put(new URL(cp.url || req.url).href.split("#")[0], r))).catch(() => {}); }
+      return res;
+    }).catch(() => caches.open(CACHE).then(async (c) => { for (const k of pageKeys(req.url)) { const r = await c.match(k); if (r) return r; } return (await c.match(new URL("./", location).href)) || Response.error(); })));
+    return;
+  }
+  e.respondWith(caches.match(req, { ignoreSearch: true }).then((hit) => hit || fetch(req).then((res) => {
+    if (res.ok && !res.redirected && res.type === "basic") { const cp = res.clone(); caches.open(CACHE).then((c) => c.put(req, cp)); }
+    return res;
+  })));
 });
 `);
 if (CFG.siteUrl) {

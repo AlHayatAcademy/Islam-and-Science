@@ -60,6 +60,19 @@ img, svg { max-width: 100%; }
 .skip:focus { right: 8px; }
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
 .muted { color: var(--ink-soft); }
+.ic { width: 1.05em; height: 1.05em; vertical-align: -0.18em; margin-left: 6px; flex: 0 0 auto; display: inline-block; }
+.main-nav a .ic { opacity: .9; }
+.pill .ic { width: 13px; height: 13px; margin-left: 4px; vertical-align: -2px; }
+.btn .ic { margin-left: 0; }
+.box-title .ic, .section-title .ic { color: var(--gold); }
+.examq b .ic { color: var(--gold); }
+.h-ic { display: inline-flex; align-items: center; justify-content: center; width: 1.5em; height: 1.5em; border-radius: 12px; background: var(--teal-soft); color: var(--teal-strong); margin-left: 10px; vertical-align: middle; }
+.h-ic .ic { margin: 0; width: 0.9em; height: 0.9em; vertical-align: 0; }
+.st-ic { display: block; margin: 0 auto 2px; width: 26px; height: 26px; color: var(--gold); }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0 auto 4px !important; padding: 2px 16px 2px 10px; border-radius: 999px; background: var(--teal); color: #fff !important; font-weight: 700; font-size: 1rem; }
+.eyebrow-logo { width: 26px; height: 26px; }
+.foot-logo { width: 22px; height: 22px; vertical-align: middle; background: #0f766e; border-radius: 50%; }
+.tab .ic { margin-left: 4px; }
 .small { font-size: 0.85em; }
 
 /* ---------------- Header ---------------- */
@@ -68,6 +81,10 @@ img, svg { max-width: 100%; }
 .brand { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 1.3rem; font-weight: 700; white-space: nowrap; margin-left: auto; }
 .brand:hover { text-decoration: none; }
 .brand svg { width: 34px; height: 34px; flex: 0 0 auto; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.55; }
+.brand-text b { font-size: 1.05rem; }
+.brand-text small { font-size: 0.78rem; color: #f3d9a0; font-weight: 400; }
+@media (max-width: 480px) { .brand-text b { font-size: 0.9rem; } .brand-text small { font-size: 0.7rem; } .brand svg { width: 28px; height: 28px; } .icon-btn { width: 34px; height: 34px; } }
 .main-nav { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; }
 .main-nav a { color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 0.86rem; white-space: nowrap; }
 .main-nav a:hover { background: rgba(255,255,255,.16); text-decoration: none; }
@@ -151,7 +168,9 @@ input:focus, select:focus { border-color: var(--teal); outline: none; }
 .unit h2 { font-size: 1.2rem; color: var(--gold); margin: 0 0 10px; }
 .topic-card { display: flex; gap: 14px; align-items: center; padding: 12px 16px; color: var(--ink); }
 .topic-card:hover { text-decoration: none; border-color: var(--teal); }
-.tnum { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; background: var(--teal); color: var(--on-accent); display: flex; align-items: center; justify-content: center; font-family: system-ui, sans-serif; font-weight: 700; }
+.tnum { position: relative; flex: 0 0 auto; width: 50px; height: 50px; border-radius: 14px; background: var(--teal); color: var(--on-accent); display: flex; align-items: center; justify-content: center; }
+.tnum .ic { width: 26px; height: 26px; margin: 0; }
+.tnum i { position: absolute; bottom: -6px; left: -6px; min-width: 22px; height: 22px; border-radius: 999px; background: var(--gold); color: #1c1407; font: 700 12px/22px system-ui, sans-serif; text-align: center; font-style: normal; border: 2px solid var(--surface); }
 .topic-card.done .tnum { background: var(--ok); }
 .topic-card h3 { margin: 0; font-size: 1.05rem; line-height: 1.9; }
 .topic-card p { margin: 0; font-size: 0.82rem; color: var(--ink-soft); line-height: 1.9; }

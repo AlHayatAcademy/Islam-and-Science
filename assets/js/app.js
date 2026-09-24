@@ -29,6 +29,16 @@
   }
   function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   var LETTERS = ["الف", "ب", "ج", "د"];
+  function svgI(d) { return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; }
+  var IC = {
+    shuffle: svgI('<path d="M3 7h4l10 10h4M3 17h4l3-3M14 10l3-3h4M18 4l3 3-3 3M18 14l3 3-3 3"/>'),
+    reset: svgI('<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/>'),
+    wrong: svgI('<circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/>'),
+    prev: svgI('<path d="m9 6 6 6-6 6"/>'), next: svgI('<path d="m15 6-6 6 6 6"/>'),
+    bulb: svgI('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>'),
+    trophy: svgI('<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 5H4a3 3 0 0 0 4 4M16 5h4a3 3 0 0 1-4 4M12 13v4M8 21h8M10 17h4v4h-4z"/>'),
+    check: svgI('<path d="M20 6 9 17l-5-5"/>')
+  };
   var LEVELS = { 1: ["یادداشت", "teal"], 2: ["فہم", "purple"], 3: ["تجزیہ و اطلاق", "gold"] };
   function toast(msg) {
     var t = $(".toast"); if (!t) { t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
@@ -73,7 +83,7 @@
     var o = '<div class="opts" role="group">';
     order.forEach(function (oi, k) { o += '<button type="button" class="opt" data-oi="' + oi + '"><span class="ol">(' + LETTERS[k] + ")</span><span>" + rich(q.o[oi]) + "</span></button>"; });
     o += "</div>";
-    var ex = '<div class="explain" aria-live="polite"><b>وضاحت:</b> ' + rich(q.e) + "</div>";
+    var ex = '<div class="explain" aria-live="polite"><b>' + IC.bulb + 'وضاحت:</b> ' + rich(q.e) + "</div>";
     card.innerHTML = head + o + ex;
     $$(".opt", card).forEach(function (b) {
       b.addEventListener("click", function () {
@@ -98,9 +108,9 @@
     root.innerHTML = "";
     var bar = document.createElement("div"); bar.className = "quiz-bar";
     bar.innerHTML = '<span class="score" aria-live="polite"></span><span class="spacer"></span>' +
-      '<button type="button" class="btn ghost" data-act="shuffle">ترتیب بدلیں</button>' +
-      (cfg.allowWrongOnly ? '<button type="button" class="btn ghost" data-act="wrong">صرف غلط دوبارہ</button>' : "") +
-      '<button type="button" class="btn" data-act="reset">دوبارہ شروع کریں</button>';
+      '<button type="button" class="btn ghost" data-act="shuffle">' + IC.shuffle + 'ترتیب بدلیں</button>' +
+      (cfg.allowWrongOnly ? '<button type="button" class="btn ghost" data-act="wrong">' + IC.wrong + 'صرف غلط دوبارہ</button>' : "") +
+      '<button type="button" class="btn" data-act="reset">' + IC.reset + 'دوبارہ شروع کریں</button>';
     var list = document.createElement("div");
     var res = document.createElement("div"); res.className = "card result hidden";
     root.appendChild(bar); root.appendChild(list); root.appendChild(res);
@@ -110,7 +120,7 @@
     function finish() {
       var p = pct(state.correct, state.list.length);
       res.classList.remove("hidden");
-      res.innerHTML = '<div class="big">' + p + '%</div><p>آپ نے ' + state.list.length + " میں سے " + state.correct + " سوالات کے درست جواب دیے۔</p><p class=\"muted\">" +
+      res.innerHTML = '<div class="st-ic" style="width:40px;height:40px">' + IC.trophy + '</div><div class="big">' + p + '%</div><p>آپ نے ' + state.list.length + " میں سے " + state.correct + " سوالات کے درست جواب دیے۔</p><p class=\"muted\">" +
         (p >= 80 ? "شاندار! آپ اس موضوع پر اچھی گرفت رکھتے ہیں۔" : p >= 60 ? "اچھی کوشش! غلط سوالات کی وضاحتیں دوبارہ پڑھیں۔" : "مضمون اور خلاصہ دوبارہ پڑھ کر پھر کوشش کریں۔") + "</p>";
       cfg.onFinish && cfg.onFinish(state.correct, state.list.length);
     }
@@ -179,7 +189,7 @@
     }
     window.addEventListener("scroll", onScroll, { passive: true });
     var rb = $("#readBtn");
-    function paintRead() { var r = !!load().read[num]; rb.textContent = r ? "✓ پڑھ لیا (نشان ہٹائیں)" : "مکمل پڑھ لیا — نشان لگائیں"; rb.classList.toggle("ghost", r); }
+    function paintRead() { var r = !!load().read[num]; rb.innerHTML = IC.check + (r ? "پڑھ لیا (نشان ہٹائیں)" : "مکمل پڑھ لیا — نشان لگائیں"); rb.classList.toggle("ghost", r); }
     function setRead(v, auto) { var st = load(); if (v) st.read[num] = Date.now(); else delete st.read[num]; save(); paintRead(); if (auto) toast("یہ موضوع \"پڑھ لیا\" میں شامل ہو گیا"); }
     rb.addEventListener("click", function () { setRead(!load().read[num]); });
     paintRead();
@@ -214,7 +224,7 @@
       var i = 0, order = data.slice();
       var stage = $("#cardsRoot");
       stage.innerHTML = '<div class="fc-stage"><div class="flash" tabindex="0" role="button" aria-label="کارڈ پلٹیں"><div class="flash-inner"><div class="flash-face flash-front"></div><div class="flash-face flash-back"></div></div></div>' +
-        '<div class="fc-hint">کارڈ پر کلک کریں یا اسپیس دبائیں تاکہ جواب دیکھیں</div><div class="row"><button class="btn ghost" data-a="prev">پچھلا</button><span class="pill" id="fcCount"></span><button class="btn ghost" data-a="next">اگلا</button><button class="btn gold" data-a="shuffle">ترتیب بدلیں</button></div></div>';
+        '<div class="fc-hint">کارڈ پر کلک کریں یا اسپیس دبائیں تاکہ جواب دیکھیں</div><div class="row"><button class="btn ghost" data-a="prev">' + IC.prev + 'پچھلا</button><span class="pill" id="fcCount"></span><button class="btn ghost" data-a="next">اگلا' + IC.next + '</button><button class="btn gold" data-a="shuffle">' + IC.shuffle + 'ترتیب بدلیں</button></div></div>';
       var fl = $(".flash", stage);
       function paint() {
         fl.classList.remove("flipped");
