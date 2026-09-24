@@ -1,76 +1,74 @@
-# اسلام اور سائنس — Course Website
+# اسلام اور سائنس — کورس ویب سائٹ (ورژن 2)
 
-A static, self-contained educational website for the "اسلام اور سائنس" (Islam & Science) course — 15 topics, each with a full article, short Q&A, and multiple-choice questions.
+اسلام اور سائنس کے تعلق پر ایک جامع اردو کورس۔ اس میں **15 موضوعات** ہیں، اور ہر موضوع میں یہ حصے ہیں:
 
-- Pure HTML / CSS / vanilla JS — no build step, no framework, no backend.
-- Self-hosted fonts (Nafees Nastaleeq for Urdu body text, Amiri for Arabic Qur'anic quotations) — works fully offline.
-- Fully responsive (mobile nav, topic dropdowns, single-column MCQ layout on small screens).
-- All course content lives in `data/content.js` (a single JS file assigning `window.CONTENT`) — edit that file to update text without touching any markup or logic.
+- سیکھنے کے اہداف اور امتحانی سوال
+- آسان، مختصر اور مربوط جملوں میں مکمل مضمون، قرآنی حوالوں اور خاکوں کے ساتھ
+- اہم نکات، اصطلاحات اور مزید مطالعہ
+- مختصر، تفصیلی، تجزیاتی اور موازنہ والے سوال و جواب
+- عام غلط فہمیاں اور ان کی حقیقت، اور کلاس مباحثے کے سوالات
+- فلیش کارڈز
+- کوئز: ہر MCQ کے ساتھ وضاحت اور مشکل کا درجہ (یادداشت، فہم، تجزیہ)
 
-## Project structure
+**مجموعی مواد:** 481 MCQs، 147 سوال و جواب، 124 اصطلاحات اور 12 خاکے۔
+
+## ویب سائٹ کی سہولیات
+
+- **فائنل امتحان:** موضوعات اور سوالات کی تعداد کا انتخاب، ٹائمر، موضوع وار نتیجہ اور جوابات کا مکمل جائزہ۔
+- **میری پیش رفت:** پڑھے گئے موضوعات، کوئز کے بہترین نمبر اور امتحانات کی تاریخ۔ غلط جوابات دہرائی کے لیے محفوظ رہتے ہیں۔
+- **فرہنگ، ٹائم لائن، نقشہ اور تلاش:** تمام اصطلاحات کی فرہنگ، مسلم سائنسدانوں کی ٹائم لائن، علمی مراکز کا نقشہ، اور پورے کورس میں تلاش۔
+- **پڑھنے میں آسانی:** رات کا موڈ، فونٹ چھوٹا یا بڑا کرنے کی سہولت، موبائل کے لیے موزوں ڈیزائن، اور پڑھنے کی پیش رفت کی پٹی۔
+- **گوگل اور سوشل میڈیا:** ہر موضوع کا الگ صفحہ ہے، اس لیے موضوعات گوگل پر مل سکتے ہیں۔ لنک شیئر کرنے پر پیش نظارہ بھی نظر آتا ہے۔
+- **آف لائن:** سائٹ بغیر انٹرنیٹ کے بھی کام کرتی ہے، اور فون پر ایپ کی طرح انسٹال کی جا سکتی ہے (PWA)۔
+- **کوئی بیرونی چیز نہیں:** نہ فریم ورک، نہ سرور۔ طلبہ کی پیش رفت صرف ان کے اپنے براؤزر میں محفوظ ہوتی ہے۔
+
+## فولڈر کی ساخت
 
 ```
 .
-├── index.html          # single-page app shell (all 5 views)
-├── css/style.css        # all styling, incl. @font-face declarations
-├── js/app.js             # router + rendering logic (hash-based routing)
-├── data/content.js       # all 15 topics: article + Q&A + MCQ content
-├── fonts/                # self-hosted woff2 fonts (Nafees Nastaleeq, Amiri)
-├── _headers              # Cloudflare Pages cache-control rules
-└── README.md
+├── index.html, syllabus.html, topic-01.html … topic-15.html   ← تیار صفحات (build.js بناتا ہے)
+├── exam.html, progress.html, glossary.html, timeline.html, search.html, 404.html
+├── assets/css/style.css        ← ڈیزائن
+├── assets/js/app.js            ← تمام سہولیات کا کوڈ
+├── data/                       ← build.js کی بنائی ہوئی ڈیٹا فائلیں (meta, mcq, search)
+├── src/topics/01.js … 15.js    ← ★ کورس کا اصل مواد (یہیں ترمیم کریں)
+├── src/extras.js               ← ٹائم لائن، نقشہ اور نصاب کے حصے
+├── src/figs.js                 ← خاکے (SVG)
+├── site.config.js              ← سائٹ کا نام، تفصیل اور لائیو پتہ
+├── build.js                    ← صفحات بنانے والا اسکرپٹ
+├── fonts/, icons/, favicon.svg, og.png, manifest.webmanifest, sw.js
 ```
 
-## Run locally
+## مواد میں ترمیم کیسے کریں؟
 
-No install needed. Either:
-
-- Double-click `index.html` to open it directly in a browser, or
-- Serve it (recommended, avoids any `file://` quirks):
-  ```bash
-  python3 -m http.server 8000
-  # then open http://localhost:8000
-  ```
-
-## Deploy — GitHub (repo + optional GitHub Pages)
-
-1. Create a new empty repository on GitHub (no README/license, since this folder already has them).
-2. From this folder:
+1. `src/topics/` میں متعلقہ موضوع کی فائل کھولیں، مثلاً `07.js`، اور متن تبدیل کریں۔
+2. ٹرمینل میں یہ کمانڈ چلائیں (Node.js ضروری ہے، کوئی انسٹالیشن نہیں):
    ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: Islam & Science course website"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/<your-repo>.git
-   git push -u origin main
+   node build.js
    ```
-3. (Optional) To host it for free on **GitHub Pages**: repo → Settings → Pages → Source: "Deploy from a branch" → Branch: `main` / root → Save. Your site will be live at `https://<your-username>.github.io/<your-repo>/` within a minute or two.
+3. تمام صفحات دوبارہ بن جائیں گے۔
 
-## Deploy — Cloudflare Pages
+**مواد لکھنے کے اصول:**
+- مضمون کے بلاک: `{h}` سرخی، `{p}` پیراگراف، `{list}` اور `{olist}` فہرستیں، `{note}` اہم نکتہ، `{quote:{ar,ur,ref}}` آیت یا حدیث، `{fig}` خاکہ، `{table}` جدول۔
+- `**متن**` لکھنے سے متن بولڈ ہو جاتا ہے۔ اعراب والا عربی متن `«…»` میں لکھیں تو وہ Amiri فونٹ میں دکھے گا۔
+- MCQ کی شکل یہ ہے: `{ l: درجہ, q: سوال, c: درست جواب, w: [تین غلط جواب], e: وضاحت }`۔ درست جواب کی جگہ build.js خود بدلتا ہے، اور ویب سائٹ ہر بار آپشنز کی ترتیب بھی بدلتی ہے۔
 
-**Option A — via GitHub (recommended, auto-deploys on every push):**
-
-1. Push this project to GitHub first (see above).
-2. Go to the [Cloudflare dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**.
-3. Select your repository.
-4. Build settings: leave **Build command** empty and **Build output directory** set to `/` (this is a static site — nothing to build).
-5. Click **Save and Deploy**. Cloudflare gives you a `*.pages.dev` URL immediately; you can attach a custom domain afterwards under the project's **Custom domains** tab.
-
-**Option B — direct upload with Wrangler CLI (no GitHub needed):**
+## مقامی طور پر چلانا
 
 ```bash
-npm install -g wrangler
-wrangler login
-wrangler pages deploy . --project-name=islam-aur-science
+python3 -m http.server 8000
+# پھر http://localhost:8000 کھولیں
 ```
 
-This uploads the current folder directly and gives you a live `*.pages.dev` URL.
+## اپ لوڈ (Deploy)
 
-The included `_headers` file (Cloudflare Pages' native way to set response headers) applies long-lived caching to the font and asset files, which Cloudflare Pages picks up automatically — no extra configuration needed.
+یہ ایک سادہ static سائٹ ہے۔ پورا فولڈر جوں کا توں اپ لوڈ کریں:
 
-## Editing content
+- **GitHub Pages:** ریپو میں push کریں، پھر Settings ← Pages ← Branch: `main` / root۔
+- **Cloudflare Pages:** Build command خالی چھوڑیں اور Output directory `/` رکھیں۔ `_headers` فائل خود لاگو ہو جائے گی۔ متبادل طریقہ: `wrangler pages deploy . --project-name=islam-aur-science`
 
-All text lives in `data/content.js` as plain JavaScript objects — one entry per topic, with `article`, `qa`, and `mcq` arrays. No HTML editing is required to fix a typo or add a question; just edit that file and refresh.
+**لائیو ہونے کے بعد:** `site.config.js` میں `siteUrl` پر اپنی سائٹ کا پتہ لکھیں اور `node build.js` دوبارہ چلائیں۔ اس سے canonical لنکس، `sitemap.xml` اور سوشل میڈیا کی تصویر کا مکمل پتہ شامل ہو جائے گا۔
 
-## License
+## لائسنس
 
-Code (HTML/CSS/JS) in this repository is provided under the MIT License — see `LICENSE`. The educational content (articles, questions and answers) is the author's original work, provided for the course's own use.
+کوڈ MIT لائسنس کے تحت ہے (فائل `LICENSE` دیکھیں)۔ تعلیمی مواد کورس کے اپنے استعمال کے لیے ہے۔ خطوط: Nafees Nastaleeq اور Amiri (SIL Open Font License)۔

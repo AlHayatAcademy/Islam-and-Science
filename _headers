@@ -1,14 +1,17 @@
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
-/css/*
+/icons/*
   Cache-Control: public, max-age=604800
 
-/js/*
-  Cache-Control: public, max-age=604800
+/assets/*
+  Cache-Control: public, max-age=86400
 
 /data/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=86400
+
+/sw.js
+  Cache-Control: no-cache
 
 /*
   X-Content-Type-Options: nosniff
